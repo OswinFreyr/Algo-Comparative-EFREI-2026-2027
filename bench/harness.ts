@@ -81,23 +81,29 @@ mesure: for (const nom of nomsVariantes) {
     // est compilée dès ses premiers appels, la chauffer deux cents fois ne coûterait que du temps.
     // Une variante peut rendre une promesse (une requête à une base, atelier 8) : attendez-la avec await,
     // comme l'appel mesuré plus bas.
+    const debutChauffe = performance.now();
+    for (let i = 0; i < echauffement; i++) {
+      if (performance.now() - debutChauffe >= chauffeMax) break;
+      puits += String(await fn(entree)).length & 1;
+    }
 
     for (let r = 1; r <= repetitions; r++) {
       // À COMPLÉTER 2 : la mémoire. Forcer un passage du garbage collector (global.gc, le script npm "bench"
       // lance Node avec --expose-gc), relever process.memoryUsage().heapUsed avant l'appel, puis juste après,
       // et noter la différence en Ko.
+      global.gc?.();
+      const memoireAvant = process.memoryUsage().heapUsed;
       const debut = performance.now();
       const resultat = await fn(entree);
       const dureeMs = performance.now() - debut;
-
-      const memoireKo = 0;
+      const memoireKo = Math.round((process.memoryUsage().heapUsed - memoireAvant) / 1024);
 
       // À COMPLÉTER 3 : consommer le résultat. Un résultat que personne ne lit peut être supprimé par le
       // compilateur. La somme de contrôle sujet.controle(resultat) le lit, et sert à vérifier que les
       // variantes donnent toutes le même résultat. Faites aussi dépendre `puits` (un nombre) de cette somme
       // (une chaîne) : le code d'un de ses caractères suffit.
-      const somme = "";
-      void resultat;
+      const somme = sujet.controle(resultat);
+      puits += somme.charCodeAt(0) || 0;
 
       mesures.push({ variante: nom, taille, repetition: r, dureeMs, memoireKo, controle: somme });
       console.log(`[harness] variante=${nom} taille=${taille} repetition=${r} duree_ms=${dureeMs.toFixed(2)} memoire_ko=${memoireKo} controle=${somme}`);
@@ -120,7 +126,9 @@ mesure: for (const nom of nomsVariantes) {
 // la médiane ne l'est pas.
 function resume(valeurs: number[]): number {
   if (valeurs.length === 0) return Number.NaN;
-  return valeurs.reduce((s, v) => s + v, 0) / valeurs.length;
+  const tri = [...valeurs].sort((a, b) => a - b);
+  const milieu = Math.floor(tri.length / 2);
+  return tri.length % 2 === 1 ? tri[milieu] : (tri[milieu - 1] + tri[milieu]) / 2;
 }
 
 console.log("\nvariante        taille   duree_ms   memoire_ko");
@@ -138,6 +146,8 @@ const fichierCsv = join(dossierResultats, `${horodatage}-${sujet.nom}.csv`);
 
 // À COMPLÉTER 5 : l'export. Écrire les mesures dans `fichierCsv` (déclaré juste au-dessus), une ligne par mesure,
 // avec l'en-tête variante;taille;repetition;duree_ms;memoire_ko;controle. Sans le CSV, la mesure n'existe pas.
+writeFileSync(fichierCsv, ["variante;taille;repetition;duree_ms;memoire_ko;controle",
+  ...mesures.map(m => `${m.variante};${m.taille};${m.repetition};${m.dureeMs.toFixed(3)};${m.memoireKo};${m.controle}`)].join("\n") + "\n", "utf-8");
 
 // Le protocole de la mesure, à côté du CSV : la rubrique 3 de l'ADR se recopie d'ici.
 const protocole = { sujet: sujet.nom, jeu: nomJeu, tailles, variantes: nomsVariantes, repetitions, echauffement, chauffe_max_ms: chauffeMax, statistique: "médiane", machine, date: new Date().toISOString(), csv: relative(process.cwd(), fichierCsv) };
