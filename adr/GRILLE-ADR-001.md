@@ -28,7 +28,7 @@ Total pondéré = 4 x Temps + 1 x Mémoire + 2 x Lisibilité + 2 x Robustesse + 
 
 Barème de la note de temps (fixé sur le budget de 43 minutes de l'étape 2) : 5 sous 20 minutes, 4 sous 43, 3 sous 65, 2 sous 90, 1 au-delà. Les minutes sont celles de la nuit à 15 000 colis : couples (`bench/resultats/2026-11-09T14-02-13-couples.csv`) x 3,26 ms par requête (1 490 s pour 457 300 requêtes), plus le calcul mesuré par le harness (`bench/resultats/2026-11-09T15-08-17-affectation.csv`).
 
-Justification des notes, une phrase chacune :
+Justification rapide des notes :
 
 - Temps A : 1 271 770 couples x 3,26 ms = 69,1 minutes, plus 4,7 s de calcul (2,09 s à 10 000 colis, x 2,25 à 15 000) : 69,2 minutes, au-dessus du budget, note 2.
 - Temps B : le même nombre de couples que le legacy (1 271 770, il parcourt aussi les 85 livreurs pour chaque colis) : 69,1 minutes, le calcul (estimé à quelques dizaines de ms) ne change rien, note 2.
