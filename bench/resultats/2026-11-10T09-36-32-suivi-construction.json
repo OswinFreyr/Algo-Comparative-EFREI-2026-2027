@@ -1,0 +1,27 @@
+{
+  "sujet": "suivi-construction",
+  "jeu": "grande",
+  "tailles": [
+    10000,
+    100000,
+    996844
+  ],
+  "variantes": [
+    "tableau",
+    "set",
+    "map"
+  ],
+  "repetitions": 5,
+  "echauffement": 3,
+  "chauffe_max_ms": 5000,
+  "statistique": "médiane",
+  "machine": {
+    "processeur": "AMD Ryzen 7 7435HS",
+    "coeurs": 16,
+    "memoire_go": 16,
+    "systeme": "Windows_NT 10.0.19045",
+    "node": "v22.20.0"
+  },
+  "date": "2026-11-10T09:36:32.731Z",
+  "csv": "bench\\resultats\\2026-11-10T09-36-32-suivi-construction.csv"
+}
