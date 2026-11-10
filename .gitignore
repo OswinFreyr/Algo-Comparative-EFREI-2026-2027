@@ -5,3 +5,5 @@ data/referentiel/adresses-33.csv.gz
 data/referentiel/adresses-gironde.csv
 data/referentiel/adresses-metropole.csv
 *.log
+
+bench/resultats/
