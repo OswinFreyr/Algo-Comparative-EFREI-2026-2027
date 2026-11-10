@@ -23,9 +23,13 @@ export const tri = (lignes: LigneFacturation[]): TotalClient[] => rapportDuMois(
 export function topKParTas(totaux: TotalClient[], k: number): TotalClient[] {
   // Le sommet du tas est le moins bon des k meilleurs : c'est lui qu'un nouveau venu doit battre.
   const tas = new TasBinaire<TotalClient>((a, b) => meilleur(b, a));
-  // À COMPLÉTER : parcourir les totaux. Tant que le tas compte moins de k clients, ajouter le client ;
-  // ensuite, ne l'ajouter que s'il est meilleur que le sommet, en retirant d'abord le sommet.
-  void totaux; void k;
+  for (const client of totaux) {
+    if (tas.taille < k) tas.ajouter(client);
+    else {
+      const pire = tas.sommet();
+      if (pire && meilleur(client, pire) < 0) { tas.retirer(); tas.ajouter(client); }
+    }
+  }
   // Le tas rend du moins bon au meilleur : on retourne la liste.
   const resultat: TotalClient[] = [];
   for (let t = tas.retirer(); t; t = tas.retirer()) resultat.push(t);

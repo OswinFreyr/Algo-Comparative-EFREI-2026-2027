@@ -1,0 +1,27 @@
+{
+  "sujet": "suivi",
+  "jeu": "grande",
+  "tailles": [
+    10000,
+    100000,
+    996844
+  ],
+  "variantes": [
+    "tableau",
+    "set",
+    "map"
+  ],
+  "repetitions": 5,
+  "echauffement": 3,
+  "chauffe_max_ms": 5000,
+  "statistique": "médiane",
+  "machine": {
+    "processeur": "Apple M1 Pro",
+    "coeurs": 8,
+    "memoire_go": 16,
+    "systeme": "Darwin 24.6.0",
+    "node": "v22.22.3"
+  },
+  "date": "2026-11-10T09:34:05.306Z",
+  "csv": "bench/resultats/2026-11-10T09-34-05-suivi.csv"
+}

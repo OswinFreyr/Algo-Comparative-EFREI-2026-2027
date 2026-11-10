@@ -1,0 +1,27 @@
+{
+  "sujet": "rapport",
+  "jeu": "mois",
+  "tailles": [
+    100000,
+    1000000,
+    3000000
+  ],
+  "variantes": [
+    "tri",
+    "tas",
+    "quickselect"
+  ],
+  "repetitions": 5,
+  "echauffement": 2,
+  "chauffe_max_ms": 5000,
+  "statistique": "médiane",
+  "machine": {
+    "processeur": "Apple M1 Pro",
+    "coeurs": 8,
+    "memoire_go": 16,
+    "systeme": "Darwin 24.6.0",
+    "node": "v22.22.3"
+  },
+  "date": "2026-11-10T15:15:55.721Z",
+  "csv": "bench/resultats/2026-11-10T15-15-55-rapport.csv"
+}
