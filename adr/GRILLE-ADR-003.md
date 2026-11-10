@@ -20,7 +20,7 @@ Option A : le legacy (`tableau`). Option B : `tas`. Option C : `seaux`.
 
 | Option | Temps | Mémoire | Lisibilité | Robustesse | Coût | Total pondéré |
 | --- | --- | --- | --- | --- | --- | --- |
-| A (legacy) | 2 | 4 | 5 | 5 | 5 | 40 |
+| A (legacy) | 3 | 4 | 5 | 5 | 5 | 43 |
 | B (tas) | 5 | 5 | 3 | 5 | 3 | 44 |
 | C (seaux) | 5 | 5 | 4 | 2 | 4 | 38 |
 
@@ -34,13 +34,13 @@ Les barèmes, fixés avant de mesurer :
 - Robustesse : 5 si l'ordre exact du contrat est rendu quel que soit l'ordre d'arrivée et le nombre d'heures limites ; 4 si seule une égalité complète sort dans un autre ordre que le legacy ; 3 si l'ordre tient à une seule heure limite par priorité ; 2 si l'ordre est faux en silence dès que les colis n'arrivent pas dans l'ordre de création ; 1 si `npm test` échoue.
 - Coût : 5 si rien ne change ; 4 pour quelques lignes et une structure fournie ; 3 pour une structure à écrire et à tester ; 2 pour une donnée à préparer à chaque lancement ; 1 pour une dépendance ajoutée.
 
-Mesures : `bench/resultats/2026-11-10T11-14-17-priorite.csv` (médiane de 5 répétitions) et `bench/resultats/2026-11-10T11-15-03-priorite-arrivees.csv` (l'épreuve).
+Mesures : `bench/resultats/2026-11-10T15-43-43-priorite.csv` (médiane de 5 répétitions) et `bench/resultats/2026-11-10T11-15-03-priorite-arrivees.csv` (l'épreuve). Un premier lancement, `bench/resultats/2026-11-10T11-14-17-priorite.csv`, fait sur un poste chargé par d'autres programmes, donnait des durées quatre à six fois plus longues (27,7 s pour le legacy) : il est écarté.
 
 Justification rapide des notes :
 
-- Temps A : 27,7 s à 15 000 colis, sous 60 s, note 2. De 9 000 à 15 000 colis la durée est multipliée par 3,06, pour un carré de 15 / 9 égal à 2,78 : la pente est celle d'un carré.
-- Temps B : 0,108 s, note 5. De 9 000 à 15 000 colis, x 1,68 pour un volume x 1,67.
-- Temps C : 0,010 s, note 5.
+- Temps A : 4,34 s à 15 000 colis, sous 10 s, note 3. De 9 000 à 15 000 colis la durée est multipliée par 2,70, pour un carré de 15 / 9 égal à 2,78 : la pente est celle d'un carré.
+- Temps B : 0,024 s, note 5. De 9 000 à 15 000 colis, x 1,54 pour un volume x 1,67.
+- Temps C : 0,003 s, note 5.
 - Mémoire : A 35,0 Mo, note 4 ; B 2,2 Mo et C 0,9 Mo, note 5.
 - Lisibilité : A 5, un tri et un retrait en tête, aucune idée à connaître. B 3, deux idées : l'arbre rangé dans un tableau, et ses deux gestes (remonter, descendre). C 4, une idée : une file par priorité.
 - Robustesse : A 5, le tri par priorité, fin de créneau puis heure de création est refait à chaque arrivée. B 5, même somme de contrôle que le legacy dans l'ordre de création et dans le désordre (`89c52d41` à 1 000 colis, `cfa0b5e5` à 9 000), le rang d'arrivée départage les égalités complètes comme le tri stable. C 2 : dans le désordre, le harness s'arrête, `seaux` donne `bc776f41` quand `tableau` donnait `89c52d41` à 1 000 colis, sans aucune erreur ; `npm test` passe pourtant, son jeu arrive dans l'ordre. De plus l'article 3 du contrat donne deux heures limites aux pharmacies (10h00 et 12h00), ce que la file à seaux ne regarde pas.
@@ -48,6 +48,6 @@ Justification rapide des notes :
 
 ## 3. La sensibilité
 
-Avec le poids du temps à 5 et celui de la lisibilité à 1 (mémoire 1, robustesse 3, coût 1) : A 39, B 51, C 44. La décision ne change pas, B reste premier.
+Avec le poids du temps à 5 et celui de la lisibilité à 1 (mémoire 1, robustesse 3, coût 1) : A 44, B 51, C 44. La décision ne change pas, B reste premier et l'écart passe de 1 à 7 points.
 
-Le jeu de poids qui fait basculer : temps 2, mémoire 1, lisibilité 3, robustesse 3, coût 1, soit un seul point passé du temps à la lisibilité. Le legacy vaut alors 43, le tas 42, les seaux 37. La décision est donc fragile aux poids, et c'est la pente qui tranche : la durée du legacy suit le carré du volume, celle du tas suit le volume. La file à seaux ne passe devant le tas que si la robustesse tombe à 1 (temps 3, mémoire 1, lisibilité 4, robustesse 1, coût 1 : seaux 42, tas 40, legacy 40), ce que le ticket exclut.
+La grille hésite : le tas ne devance le legacy que d'un point, 44 contre 43. Le jeu de poids qui fait basculer : temps 2, mémoire 1, lisibilité 2, robustesse 4, coût 1, soit un seul point passé du temps à la robustesse. Le legacy vaut alors 45, le tas 44, les seaux 37. La décision est fragile aux poids, et c'est la pente qui tranche : la durée du legacy suit le carré du volume, celle du tas suit le volume. La file à seaux ne passe devant le tas que si la robustesse tombe à 1 (temps 4, mémoire 1, lisibilité 3, robustesse 1, coût 1 : seaux 43, tas 42, legacy 41), ce que le ticket exclut.

@@ -16,32 +16,34 @@ Sur le quai, les préparateurs prennent toujours le colis le plus urgent : pharm
 - Jeux : `data/jeux/grande`, colis uniques dans l'ordre de création, 1 000, 9 000 et 15 000 colis.
 - Répétitions et échauffement : 5 répétitions, 2 tours d'échauffement.
 - Statistique retenue : la médiane.
-- Mesuré : une soirée entière par appel (après chaque arrivée, 0 ou 1 prise tirée à graine fixe, puis la file est vidée), durée et pic mémoire : `bench/resultats/2026-11-10T11-14-17-priorite.csv`. Somme de contrôle de l'ordre de sortie identique pour les trois files à chaque taille.
+- Mesuré : une soirée entière par appel (après chaque arrivée, 0 ou 1 prise tirée à graine fixe, puis la file est vidée), durée et pic mémoire : `bench/resultats/2026-11-10T15-43-43-priorite.csv`. Somme de contrôle de l'ordre de sortie identique pour les trois files à chaque taille.
 
 | Option | 1 000 | 9 000 | 15 000 | Mémoire à 15 000 |
 | --- | --- | --- | --- | --- |
-| A (`tableau`) | 77,2 ms | 9 071 ms | 27 734 ms | 35,0 Mo |
-| B (`tas`) | 5,6 ms | 64,4 ms | 108,5 ms | 2,2 Mo |
-| C (`seaux`) | 0,8 ms | 6,4 ms | 10,4 ms | 0,9 Mo |
+| A (`tableau`) | 20,4 ms | 1 605 ms | 4 341 ms | 35,0 Mo |
+| B (`tas`) | 1,3 ms | 15,3 ms | 23,6 ms | 2,2 Mo |
+| C (`seaux`) | 0,3 ms | 1,3 ms | 2,6 ms | 0,9 Mo |
 
-De 9 000 à 15 000 colis, le legacy est multiplié par 3,06 (carré de 15 / 9 : 2,78), le tas par 1,68.
+De 9 000 à 15 000 colis, le legacy est multiplié par 2,70 (carré de 15 / 9 : 2,78), le tas par 1,54.
+
+Un premier lancement (`bench/resultats/2026-11-10T11-14-17-priorite.csv`), fait sur un poste chargé par d'autres programmes, donnait des durées quatre à six fois plus longues (27,7 s pour le legacy à 15 000 colis) : il est écarté. Dans le lancement retenu, une répétition du legacy à 15 000 colis sort à 15,8 s contre 4,2 à 4,4 s pour les quatre autres ; la médiane n'en est pas affectée.
 
 L'épreuve (`bench/resultats/2026-11-10T11-15-03-priorite-arrivees.csv`, arrivées dans l'ordre du fichier et non de création) : le tas rend la somme de contrôle du legacy à 1 000 et 9 000 colis, le harness s'arrête sur la file à seaux dès 1 000 colis (`bc776f41` contre `89c52d41`).
 
-Courbe : `bench/resultats/2026-11-10T11-14-17-priorite.svg`.
+Courbe : `bench/resultats/2026-11-10T15-43-43-priorite.svg`.
 
 ## 4. Décision
 
-Nous adoptons l'option B (`tas`), total pondéré 44 contre 40 pour le legacy et 38 pour `seaux` (`adr/GRILLE-ADR-003.md`) : elle rend l'ordre exact du contrat quel que soit l'ordre d'arrivée, comme le legacy, et sa durée suit le volume au lieu de son carré (0,1 s contre 27,7 s à 15 000 colis) ; elle reste juste tant que la comparaison du contrat et le rang d'arrivée lui sont fournis.
+Nous adoptons l'option B (`tas`), total pondéré 44 contre 43 pour le legacy et 38 pour `seaux` (`adr/GRILLE-ADR-003.md`) : la grille hésitant à un point entre le tas et le legacy, c'est la pente qui tranche, la durée du legacy suit le carré du volume (4,3 s à 15 000 colis) quand celle du tas suit le volume (0,02 s) ; le tas reste juste tant que la comparaison du contrat et le rang d'arrivée lui sont fournis.
 
 ## 5. Conséquences et limites
 
-Le tas est une structure à écrire, à tester et à relire (`bench/variantes/tas.ts`, deux idées à connaître), et il garde une table des rangs d'arrivée à côté de la file. La décision est fragile aux poids : un seul point passé du temps à la lisibilité (temps 2, lisibilité 3) remet le legacy devant, 43 contre 42 ; c'est la pente qui tranche. Les durées ont été relevées sur un poste chargé par d'autres programmes : elles sont plus longues que celles de la fiche (27,7 s contre 4,5 s pour le legacy), les rapports entre files, eux, sont du même ordre. Non mesuré : le quai réel, les prises réelles des préparateurs, les volumes au-delà de 15 000 colis.
+Le tas est une structure à écrire, à tester et à relire (`bench/variantes/tas.ts`, deux idées à connaître), et il garde une table des rangs d'arrivée à côté de la file. La décision est fragile aux poids : un seul point passé du temps à la robustesse (temps 2, robustesse 4) remet le legacy devant, 45 contre 44 ; c'est la pente qui tranche. Les durées dépendent de la charge du poste : un premier lancement sur un poste chargé a été écarté. Non mesuré : le quai réel, les prises réelles des préparateurs, les volumes au-delà de 15 000 colis.
 
-Domaine de validité : nous avons fait varier le volume (1 000, 9 000 et 15 000 colis) et l'ordre d'arrivée (ordre de création, ordre du fichier). Nous n'avons pas fait varier le rythme des prises ni la part des pharmacies, et le jeu n'a qu'une heure limite par priorité. Par la règle du carré (27,7 s x (volume / 15 000)²), une soirée du legacy passe 10 s vers 9 000 colis, ce que la mesure confirme (9,07 s à 9 000) : sur ce poste sa note de temps est déjà à 2 au volume de décembre, et elle tombe à 1 (60 s) vers 22 000 colis. Sous 2 000 colis environ, le legacy tient sous 0,5 s et le tas n'apporte rien.
+Domaine de validité : nous avons fait varier le volume (1 000, 9 000 et 15 000 colis) et l'ordre d'arrivée (ordre de création, ordre du fichier). Nous n'avons pas fait varier le rythme des prises ni la part des pharmacies, et le jeu n'a qu'une heure limite par priorité. Par la règle du carré (4,34 s x (volume / 15 000)²), une soirée du legacy passe 10 s vers 22 800 colis : sa note de temps tombe alors à 2 et le tas mène de 4 points. Au volume actuel de 9 000 colis, le legacy tient en 1,6 s (note 4) et repasse devant le tas, 46 contre 44 : la décision vaut pour le pic de décembre et au-delà, pas pour une soirée ordinaire.
 
 Ce qui rendrait la file à seaux juste : que les colis arrivent toujours dans l'ordre de leur création, ce que l'épreuve dément, et qu'une priorité n'ait qu'une heure limite, ce que l'article 3 du contrat dément (avant 10h00 pour une commande passée avant 19h00, avant 12h00 entre 19h00 et 23h00). Une file à quatre seaux, deux pour les pharmacies, réglerait la seconde hypothèse mais pas la première : l'épreuve échoue sur un jeu qui n'a qu'une heure limite par priorité, donc à cause du seul ordre d'arrivée (raisonnement, non mesuré).
 
 ## 6. En trois phrases pour la directrice des opérations
 
-Chaque soir, le quai doit sortir les colis des pharmacies en premier, dans l'ordre exact du contrat, et la méthode actuelle range toute la file d'attente à chaque arrivée : pour 15 000 colis, cela occupe près de 28 secondes l'ordinateur qui sert aussi le site, et presque trois fois plus dès que le volume augmente de moitié. Nous retenons une méthode qui ne déplace que quelques colis à chaque arrivée : la même soirée lui prend un dixième de seconde et l'ordre de sortie reste exactement celui d'aujourd'hui, même quand un camion arrive en retard. La méthode encore plus rapide, une file par type de colis, est écartée parce qu'elle sert les colis dans le mauvais ordre, sans prévenir, dès qu'ils n'arrivent pas dans l'ordre de leur création.
+Chaque soir, le quai doit sortir les colis des pharmacies en premier, dans l'ordre exact du contrat, et la méthode actuelle range toute la file d'attente à chaque arrivée : pour 15 000 colis, cela occupe plus de 4 secondes l'ordinateur qui sert aussi le site, et presque trois fois plus chaque fois que le volume augmente des deux tiers. Nous retenons une méthode qui ne déplace que quelques colis à chaque arrivée : la même soirée lui prend quelques centièmes de seconde et l'ordre de sortie reste exactement celui d'aujourd'hui, même quand un camion arrive en retard. La méthode encore plus rapide, une file par type de colis, est écartée parce qu'elle sert les colis dans le mauvais ordre, sans prévenir, dès qu'ils n'arrivent pas dans l'ordre de leur création.
