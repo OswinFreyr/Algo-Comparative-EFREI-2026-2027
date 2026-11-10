@@ -5,3 +5,8 @@ data/referentiel/adresses-33.csv.gz
 data/referentiel/adresses-gironde.csv
 data/referentiel/adresses-metropole.csv
 *.log
+
+cours*/
+bench/resultats/
+LICENCE_BAN.txt
+.vscode/
