@@ -26,7 +26,7 @@ Option A : le legacy (`tableau`). Option B : `set`. Option C : `map`.
 
 Total pondéré = 5 x Temps + 2 x Mémoire + 1 x Lisibilité + 1 x Robustesse + 1 x Coût.
 
-Barème du temps, sur une requête à 13 millions de scans : 5 sous 10 ms, 4 sous 50 ms, 3 sous 100 ms, 2 sous 1 s, 1 au-delà. On part de la médiane du lot de 100 à 996 844 scans (`bench/resultats/2026-11-10T09-34-05-suivi.csv`), on divise par 100, puis on multiplie par 13 pour le tableau et le Set, qui grandissent avec le nombre de scans. La Map ne grandit pas : une lecture reste une lecture.
+Barème du temps, sur une requête à 13 millions de scans : 5 sous 1 ms, 4 sous 10 ms, 3 sous 100 ms, 2 sous 1 s, 1 au-delà. On part de la médiane du lot de 100 à 996 844 scans (`bench/resultats/2026-11-10T09-34-05-suivi.csv`), on divise par 100, puis on multiplie par 13 pour le tableau et le Set, qui grandissent avec le nombre de scans. La Map ne grandit pas : une lecture reste une lecture.
 
 Barème de la mémoire, à la construction (`bench/resultats/2026-11-10T09-36-07-suivi-construction.csv`) : 5 sous 1 Mo, 4 sous 10 Mo.
 
