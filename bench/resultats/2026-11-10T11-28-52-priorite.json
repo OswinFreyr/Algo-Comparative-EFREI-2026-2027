@@ -1,0 +1,25 @@
+{
+  "sujet": "priorite",
+  "jeu": "grande",
+  "tailles": [
+    30000,
+    50000
+  ],
+  "variantes": [
+    "tableau",
+    "tas"
+  ],
+  "repetitions": 1,
+  "echauffement": 0,
+  "chauffe_max_ms": 5000,
+  "statistique": "médiane",
+  "machine": {
+    "processeur": "AMD Ryzen 7 7435HS",
+    "coeurs": 16,
+    "memoire_go": 16,
+    "systeme": "Windows_NT 10.0.19045",
+    "node": "v22.20.0"
+  },
+  "date": "2026-11-10T11:28:52.535Z",
+  "csv": "bench\\resultats\\2026-11-10T11-28-52-priorite.csv"
+}

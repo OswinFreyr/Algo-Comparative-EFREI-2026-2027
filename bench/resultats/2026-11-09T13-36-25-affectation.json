@@ -1,0 +1,27 @@
+{
+  "sujet": "affectation",
+  "jeu": "moyenne",
+  "tailles": [
+    1000,
+    2000,
+    5000,
+    10000
+  ],
+  "variantes": [
+    "tri",
+    "map"
+  ],
+  "repetitions": 5,
+  "echauffement": 200,
+  "chauffe_max_ms": 5000,
+  "statistique": "médiane",
+  "machine": {
+    "processeur": "AMD Ryzen 7 7435HS",
+    "coeurs": 16,
+    "memoire_go": 16,
+    "systeme": "Windows_NT 10.0.19045",
+    "node": "v22.20.0"
+  },
+  "date": "2026-11-09T13:36:25.226Z",
+  "csv": "bench\\resultats\\2026-11-09T13-36-25-affectation.csv"
+}

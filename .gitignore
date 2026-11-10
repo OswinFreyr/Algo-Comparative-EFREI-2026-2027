@@ -7,6 +7,6 @@ data/referentiel/adresses-metropole.csv
 *.log
 
 cours*/
-bench/resultats/
+# bench/resultats/
 LICENCE_BAN.txt
 .vscode/

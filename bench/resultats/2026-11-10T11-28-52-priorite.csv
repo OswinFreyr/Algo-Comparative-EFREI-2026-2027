@@ -1,0 +1,5 @@
+variante;taille;repetition;duree_ms;memoire_ko;controle
+tableau;30000;1;28541.508;10984;034ba123
+tableau;50000;1;95237.928;2159;1e0cdf35
+tas;30000;1;73.482;2489;034ba123
+tas;50000;1;133.753;5554;1e0cdf35

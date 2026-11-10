@@ -1,0 +1,8 @@
+variante;taille;duree_ms;jeu;repetition;horodatage
+legacy;1000;33.2;petite;1;2026-11-09T09:37:55.323Z
+legacy;1000;25.7;petite;2;2026-11-09T09:37:55.351Z
+legacy;1000;25.8;petite;3;2026-11-09T09:37:55.378Z
+legacy;10000;2102.3;moyenne;1;2026-11-09T09:38:09.412Z
+legacy;10000;2091.2;moyenne;2;2026-11-09T09:38:11.506Z
+legacy;10000;2128.1;moyenne;3;2026-11-09T09:38:13.636Z
+legacy;100000;424999.0;grande;1;2026-11-09T09:45:45.559Z

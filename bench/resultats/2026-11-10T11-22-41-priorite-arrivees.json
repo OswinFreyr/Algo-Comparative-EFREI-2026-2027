@@ -1,0 +1,26 @@
+{
+  "sujet": "priorite-arrivees",
+  "jeu": "grande",
+  "tailles": [
+    1000,
+    9000
+  ],
+  "variantes": [
+    "tableau",
+    "tas",
+    "seaux"
+  ],
+  "repetitions": 3,
+  "echauffement": 0,
+  "chauffe_max_ms": 5000,
+  "statistique": "médiane",
+  "machine": {
+    "processeur": "AMD Ryzen 7 7435HS",
+    "coeurs": 16,
+    "memoire_go": 16,
+    "systeme": "Windows_NT 10.0.19045",
+    "node": "v22.20.0"
+  },
+  "date": "2026-11-10T11:22:41.601Z",
+  "csv": "bench\\resultats\\2026-11-10T11-22-41-priorite-arrivees.csv"
+}
