@@ -16,7 +16,7 @@ Le premier jour ouvré du mois, à 6h, le rapport des cent premiers clients (par
 - Jeux : `data/jeux/mois`, 100 000, 1 000 000 et 3 000 000 de lignes de facturation.
 - Répétitions et échauffement : 5 répétitions, 2 tours d'échauffement.
 - Statistique retenue : la médiane.
-- Mesuré : durée et mémoire d'un rapport, lignes déjà chargées en mémoire (`bench/resultats/2026-11-10T14-55-06-rapport.csv`). Somme de contrôle identique pour les trois variantes à chaque taille. Le relevé de mémoire du tas à 100 000 lignes saute au début de la mesure (4 292 Ko aux deux premières répétitions, 296 Ko ensuite) : le ramasse-miettes ; la médiane retient 301 Ko.
+- Mesuré : durée et mémoire d'un rapport, lignes déjà chargées en mémoire (`bench/resultats/2026-11-10T14-55-06-rapport.csv`). Somme de contrôle identique pour les trois variantes à chaque taille. Le relevé de mémoire du tas à 100 000 lignes saute au début de la mesure (4 292 Ko aux deux premières répétitions, 296 Ko ensuite) : le ramasse-miettes ; la médiane retient 301 Ko. Le quickselect relève 234 Ko à 3 000 000 de lignes ici, et 245 Ko à deux relances (Node v22.20.0) ; un autre poste relève 19 459 Ko : ordre de grandeur à lire avec prudence, le ramasse-miettes passe ou non.
 
 | Option | 100 000 | 1 000 000 | 3 000 000 | Mémoire à 3 000 000 |
 | --- | --- | --- | --- | --- |
@@ -30,7 +30,7 @@ Courbe : `bench/resultats/2026-11-10T14-55-06-rapport.svg`.
 
 ## 4. Décision
 
-Nous adoptons l'option B (`tas`), total pondéré 47 contre 41 pour `quickselect` et 40 pour le legacy (`adr/GRILLE-ADR-004.md`), parce que le critère de la mémoire, qui pèse 4, passe de 65 Mo à 0,3 Mo, et que `tas` et `quickselect` se valent sur la mesure (78 ms contre 76 ms) : le tas les départage par un pire cas garanti et un code plus simple à lire.
+Nous adoptons l'option B (`tas`), total pondéré 45 contre 41 pour `quickselect` et 40 pour le legacy (`adr/GRILLE-ADR-004.md`), parce que le critère de la mémoire, qui pèse 4, passe de 65 Mo à 0,3 Mo, et que `tas` et `quickselect` se valent sur la mesure (78 ms contre 76 ms) : le tas les départage par un pire cas garanti et un code plus simple à lire.
 
 ## 5. Conséquences et limites
 

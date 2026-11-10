@@ -30,7 +30,7 @@ Courbe : `bench/resultats/2026-11-10T09-31-36-suivi.svg`.
 
 ## 4. Décision
 
-Nous adoptons l'option C (`map`), total pondéré 43 contre 36 pour `set` et 35 pour le legacy (`adr/GRILLE-ADR-002.md`), parce que le critère du temps, qui pèse 5, est celui qui fait passer chaque appel de 590 ms à environ une microseconde.
+Nous adoptons l'option C (`map`), total pondéré 44 contre 34 pour le legacy et 29 pour `set` (`adr/GRILLE-ADR-002.md`), parce que le critère du temps, qui pèse 5, est celui qui fait passer chaque appel de 590 ms à environ une microseconde.
 
 ## 5. Conséquences et limites
 

@@ -21,7 +21,7 @@ Option A : le legacy (`tri`). Option B : `tas` (totaux par Map, puis tas de tail
 | Option | Temps | Mémoire | Lisibilité | Robustesse | Coût | Total pondéré |
 | --- | --- | --- | --- | --- | --- | --- |
 | A (legacy) | 4 | 3 | 5 | 5 | 5 | 40 |
-| B (tas) | 5 | 5 | 4 | 5 | 4 | 47 |
+| B (tas) | 5 | 5 | 3 | 5 | 4 | 45 |
 | C (quickselect) | 5 | 5 | 2 | 3 | 4 | 41 |
 
 Total pondéré = 2 x Temps + 4 x Mémoire + 2 x Lisibilité + 1 x Robustesse + 1 x Coût.
@@ -39,10 +39,10 @@ Justification rapide des notes :
 
 - Temps A : 1 351 ms à 3 000 000 de lignes, entre 0,5 s et 2 s, note 4. Temps B : 78 ms, note 5. Temps C : 76 ms, note 5.
 - Mémoire A : 66 516 Ko, soit 65 Mo, entre 50 et 200 Mo, note 3. Mémoire B : 304 Ko, note 5. Mémoire C : 234 Ko, note 5. Le tri dépasse le tas de 219 fois en mémoire et de 17 fois en temps : c'est l'écart de mémoire qui répond au ticket.
-- Lisibilité : A 5, un tri, un regroupement, un second tri, aucune idée à connaître. B 4, une idée : le tas de taille K dont le sommet est le moins bon des K gardés. C 2, trois idées : le pivot, la descente dans une seule moitié et le tirage à graine fixe.
+- Lisibilité : A 5, un tri, un regroupement, un second tri, aucune idée à connaître. B 3, deux idées : le tas, et son sommet qui est le moins bon des K gardés. C 2, trois idées : le pivot, la descente dans une seule moitié et le tirage à graine fixe.
 - Robustesse A : `npm test` passe, c'est la référence, pire cas garanti en O(n log n), note 5. Robustesse B : `npm test` passe (mêmes cent clients que le legacy, égalité de totaux départagée par le numéro de client, moins de clients que K), pire cas garanti en O(m log K), note 5. Robustesse C : classement exact aux trois tests, mais le pire cas est quadratique, rendu improbable par le pivot tiré à graine fixe, note 3. Les trois sommes de contrôle sont identiques à chaque taille.
 - Coût : A 5, rien ne change. B 4, quelques lignes et un tas déjà écrit (atelier 6). C 4, quelques lignes et un quickselect fourni, écrit en entier dans `bench/variantes/rapport.ts`.
 
 ## 3. La sensibilité
 
-Avec le poids du temps à 5 et celui de la lisibilité à 1 : A 46, B 51, C 49. B reste premier et l'écart avec C passe de 6 à 2 points. La décision ne change pas : B dépasse A tant que le poids de la mémoire reste au-dessus de 0,5 environ (écart B - A = poids du temps + 2 x poids de la mémoire - poids de la lisibilité - poids du coût, soit 7 aux poids du ticket), et B dépasse C quels que soient les poids, puisqu'il est au moins aussi bien noté sur les cinq critères. La seule égalité possible entre B et C est un poids nul sur la lisibilité et la robustesse. La décision est solide aux poids.
+Avec le poids du temps à 5 et celui de la lisibilité à 1 (les autres poids gardés) : A 47, B 57, C 54. B reste premier et l'écart avec C passe de 4 à 3 points. La décision ne change pas. B - A = poids du temps + 2 x poids de la mémoire - 2 x poids de la lisibilité - poids du coût, soit 5 aux poids du ticket : A repasse devant B seulement si le poids de la mémoire tombe sous 1,5 environ (il est de 4). B - C = poids de la lisibilité + 2 x poids de la robustesse, positif dès que l'un des deux pèse quelque chose. La décision est solide aux poids.
