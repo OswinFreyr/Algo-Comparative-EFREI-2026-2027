@@ -126,6 +126,38 @@ Le référentiel figé, le harness du binôme, la grille comparative et la premi
 Les gabarits à copier avant de les remplir : `bench/BIAIS-bench-naif-gabarit.md` en `bench/BIAIS-bench-naif.md`,
 `adr/grille-comparative.md` en `adr/GRILLE-ADR-001.md`, `adr/ADR-000-gabarit.md` en `adr/ADR-001-affectation.md`.
 
+## Journée 3 (mardi 10 novembre) : ce que coûte une structure
+
+Trois sujets de plus pour le harness, un nouveau jeu de données, et trois "À COMPLÉTER" (un par atelier).
+
+| Commande | Ce qu'elle fait |
+| --- | --- |
+| `npm run mois` | Génère le mois de facturation d'octobre 2026 : 3 000 000 de lignes dans `data/jeux/mois/` (quelques secondes, 110 Mo environ) |
+| `npm run bench -- --sujet suivi --repetitions 5 --echauffement 3` | Atelier 5 : 100 requêtes de la page "Où est mon colis" sur 10 000, 100 000 et 996 844 scans (tableau, set, map) |
+| `npm run bench -- --sujet suivi-construction --repetitions 5 --echauffement 3` | Atelier 5 : le coût de construire la structure de recherche, mémoire comprise |
+| `npm run bench -- --sujet priorite --repetitions 5 --echauffement 2` | Atelier 6 : la file du quai un soir, à 1 000, 9 000 et 15 000 colis (tableau, tas, seaux) |
+| `npm run bench -- --sujet priorite-arrivees --repetitions 3` | Atelier 6 : la même soirée, colis arrivés dans le désordre |
+| `npm run bench -- --sujet rapport --repetitions 5 --echauffement 2` | Atelier 7 : les cent premiers clients du mois sur 100 000, 1 000 000 et 3 000 000 de lignes (tri, tas, quickselect) |
+| `npm run bench -- --liste` | Les sujets du harness et leurs variantes |
+| `npm run verifier -- 5` | Le correcteur de l'atelier 5 (aussi 6 et 7) |
+
+Les fichiers de la journée :
+
+```
+legacy/src/suivi.ts          la page "Où est mon colis" (2024) : elle relit tous les scans à chaque requête
+legacy/src/quai.ts           la file du quai (2019) : retriée à chaque arrivée
+legacy/src/rapport.ts        le rapport de 6h (2020) : trie toutes les lignes du mois
+data/generateur/mois.ts      le générateur du mois de facturation
+bench/variantes/suivi.ts     tableau, set, map (À COMPLÉTER : construireMap) et dichotomie
+bench/variantes/tas.ts       le tas binaire (À COMPLÉTER : remonter et descendre), resservi aux ateliers 7 et 10
+bench/variantes/priorite.ts  tableau, tas, seaux
+bench/variantes/rapport.ts   tri, tas de taille K (À COMPLÉTER : topKParTas), quickselect
+bench/sujets/                suivi, suivi-construction, priorite, priorite-arrivees, rapport
+```
+
+Le fichier `mois/facturation.csv` : `id;jour;client_id;type;montant_centimes`, une ligne par prestation facturée
+(suivi, livraison, prise en charge, retour, supplément), pour les 1 900 comptes professionnels d'Efrei (pièce 01), graine 2026.
+
 ## Règles
 
 - Le dossier `legacy/` ne se modifie pas : c'est la référence, on la mesure et on la compare.

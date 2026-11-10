@@ -7,6 +7,7 @@
   "scripts": {
     "ban": "tsx data/generateur/ban.ts",
     "data": "tsx data/generateur/generer.ts",
+    "mois": "tsx data/generateur/mois.ts",
     "chrono": "tsx legacy/bin/chrono.ts",
     "batch": "tsx legacy/bin/chrono.ts --etape toutes",
     "bench": "node --expose-gc --import tsx bench/harness.ts",
