@@ -24,17 +24,17 @@ La page « Où est mon colis » cherche un numéro de suivi parmi les scans gard
 | B | 8,2 ms | 87,5 ms | 964,4 ms | 5 122 Ko |
 | C | 0,04 ms | 0,06 ms | 0,06 ms | 7 170 Ko |
 
-Les temps sont ceux de 100 consultations. La mémoire est celle de la construction à 996 844 scans : 1 Ko, 5 122 Ko et 7 170 Ko. Construire coûte alors 0,015 ms, 290,3 ms et 764,9 ms. Une consultation, à cette taille, dure donc 14,9 ms, 9,6 ms et 0,0006 ms.
+Les temps du tableau sont ceux du lot de 100 consultations. La mémoire est celle de la construction à 996 844 scans : 1 Ko, 5 122 Ko et 7 170 Ko. Construire coûte alors 0,015 ms, 290,3 ms et 764,9 ms. Une consultation, à cette taille, dure 14,9 ms, 9,6 ms et 0,0006 ms. Projetée à 13 millions de scans (fois 13, le tableau et le Set grandissent avec le volume, la Map non) : 193 ms, 125 ms et 0,0006 ms. C'est cette requête-là que note la grille.
 
 Courbe : `bench/resultats/2026-11-10T09-34-05-suivi.svg`.
 
 ## 4. Décision
 
-Nous adoptons l'option C (`map`), total pondéré 39 contre 34 pour le tableau et 30 pour le Set (`adr/GRILLE-ADR-002.md`), parce que le temps, qui pèse 4, fait passer 100 consultations de 1 488,5 ms à 0,06 ms sur 996 844 scans.
+Nous adoptons l'option C (`map`), total pondéré 44 contre 34 pour le tableau et 29 pour le Set (`adr/GRILLE-ADR-002.md`), parce que le temps, qui pèse 5, fait passer une requête projetée à 13 millions de scans de 193 ms à moins de 0,001 ms.
 
 ## 5. Conséquences et limites
 
-La Map occupe 7 170 Ko à 996 844 scans et se construit en 764,9 ms, une fois. Aucune dépendance : le code garde le scan le plus récent avec `plusRecent`, comme le legacy. La mémoire du Set et de la Map est identique à 100 000 et à 996 844 scans : les scans sont presque rangés par heure, et le premier passage de chaque colis est déjà dans les 100 000 premiers. Ce qui grandit ensuite, c'est le temps de les relire, pas la taille de la table. Non mesuré : les 13 millions de scans de production, une mise à jour au fil des 70 000 arrivées quotidiennes, le délai vu par le client une fois la page servie sur le réseau.
+La Map occupe 7 170 Ko à 996 844 scans et se construit en 764,9 ms, une fois. Le Set en occupe 5 122 Ko : les deux sont entre 1 et 10 Mo, la même note de mémoire. Aucune dépendance : le code garde le scan le plus récent avec `plusRecent`, comme le legacy. La structure est à tenir à jour à chaque scan, contrairement au tableau, qui n'a rien à préparer et ne vérifie pas le format du numéro. La mémoire du Set et de la Map est identique à 100 000 et à 996 844 scans : les scans sont presque rangés par heure, et le premier passage de chaque colis est déjà dans les 100 000 premiers. Ce qui grandit ensuite, c'est le temps de les relire, pas la taille de la table. Non mesuré : les 13 millions de scans de production, une mise à jour au fil des 70 000 arrivées quotidiennes, le délai vu par le client une fois la page servie sur le réseau.
 
 Domaine de validité : nous avons fait varier le nombre de scans (10 000, 100 000, 996 844). Nous n'avons pas fait varier les 13 000 000 de scans, les 70 000 arrivées par jour, ni la part de numéros mal tapés (un sur cinq). La Map, construction comprise, devient moins chère que le tableau à partir de 52 consultations (764,9 ms de construction contre 14,9 ms par consultation, à 996 844 scans). En dessous, si l'on reconstruisait la table à chaque consultation, le tableau resterait moins cher. La page en fait 40 000 par jour : la décision tient. Si les temps restent proportionnels au nombre de scans, le seuil reste d'environ 52 consultations à 13 millions de scans, et une reconstruction complète y prendrait environ 10 secondes.
 

@@ -1,41 +1,45 @@
-# Grille comparative - gabarit
+# Grille comparative - ADR-002 : retrouver le dernier scan d'un colis
 
-La grille sert à décider, pas à classer par vitesse. Les poids dépendent du ticket : un traitement de nuit
-qui tient sa fenêtre supporte d'être lent, un traitement qui en déborde ne le supporte plus, une page appelée
-40 000 fois par jour ne l'a jamais supporté. Les poids et le barème de chaque note se fixent avant de mesurer.
+Ticket : la page « Où est mon colis », 40 000 fois par jour, parmi 13 millions de scans gardés six mois. La note de temps se lit sur une requête à ce volume, pas sur le lot de 100 mesuré par le harness.
 
 ## 1. Les critères et leur poids pour ce ticket
 
 | Critère | Ce qu'on mesure ou ce qu'on juge | Poids (somme = 10) |
 | --- | --- | --- |
-| Temps | ce que la production paiera : durée des requêtes répétées 40 000 fois par jour, plus le coût de construction de l'index | 4 |
-| Mémoire | mémoire supplémentaire nécessaire pour conserver la structure de recherche à l'échelle du jeu grande | 2 |
-| Lisibilité | un développeur qui découvre le code le comprend-il en cinq minutes | 2 |
-| Robustesse | comportement sur les doublons, les vides et les numéros invalides | 1 |
-| Coût de mise en oeuvre | lignes changées, dépendances ajoutées et données à préparer | 1 |
+| Temps | une requête projetée à 13 millions de scans : la page est appelée 40 000 fois par jour | 5 |
+| Mémoire | mémoire de la structure de recherche, mesurée à la construction sur 996 844 scans | 2 |
+| Lisibilité | un développeur qui découvre le code le comprend-il en cinq minutes | 1 |
+| Robustesse | ce qu'il faut tenir à jour, et le format des numéros | 1 |
+| Coût de mise en oeuvre | lignes changées, structure fournie par le langage, dépendance | 1 |
 
-Gardez les cinq lignes. Un critère qui ne compte pas pour ce ticket reçoit le poids 0 : c'est une décision, écrivez pourquoi.
+Les poids sont ceux de la fiche. Le temps pèse 5 : une page interactive ne supporte pas d'attendre. Aucun critère à 0.
 
 ## 2. Les options, note de 1 à 5 par critère
 
-Une note est un chiffre seul, de 1 à 5, par case : "4", pas "4/5" ni "4 (lisible)". La justification va sous le tableau.
+Option A : le legacy (`tableau`). Option B : `set`. Option C : `map`.
 
 | Option | Temps | Mémoire | Lisibilité | Robustesse | Coût | Total pondéré |
 | --- | --- | --- | --- | --- | --- | --- |
-| A (legacy) | 1 | 5 | 5 | 5 | 5 | 34 |
-| B | 2 | 3 | 4 | 5 | 3 | 30 |
-| C | 5 | 2 | 4 | 5 | 2 | 39 |
+| A (tableau) | 2 | 5 | 5 | 4 | 5 | 34 |
+| B (set) | 2 | 4 | 4 | 3 | 4 | 29 |
+| C (map) | 5 | 4 | 4 | 3 | 4 | 44 |
 
-Total pondéré = 4 × Temps + 2 × Mémoire + 2 × Lisibilité + 1 × Robustesse + 1 × Coût. Une note de temps ne se donne pas sans une mesure dans `bench/resultats/` : le CSV du harness et celui de `npm run couples` quand la production paie des requêtes.
+Total pondéré = 5 x Temps + 2 x Mémoire + 1 x Lisibilité + 1 x Robustesse + 1 x Coût.
 
-Barème de la note de temps, fixé avant la mesure sur le budget d'une page interactive : 5 pour au plus 10 ms, 4 pour au plus 100 ms, 3 pour au plus 500 ms, 2 pour au plus 1 000 ms et 1 au-delà. À 996 844 scans, le tableau obtient 1 (1 488,5 ms), le Set 2 (964,4 ms) et la Map 5 (0,1 ms). Le coût de construction est également pris en compte dans la justification : 0,02 ms pour le tableau, 290,31 ms pour le Set et 764,89 ms pour la Map.
+Barème du temps, sur une requête à 13 millions de scans : 5 sous 10 ms, 4 sous 50 ms, 3 sous 100 ms, 2 sous 1 s, 1 au-delà. On part de la médiane du lot de 100 à 996 844 scans (`bench/resultats/2026-11-10T09-34-05-suivi.csv`), on divise par 100, puis on multiplie par 13 pour le tableau et le Set, qui grandissent avec le nombre de scans. La Map ne grandit pas : une lecture reste une lecture.
+
+Barème de la mémoire, à la construction (`bench/resultats/2026-11-10T09-36-07-suivi-construction.csv`) : 5 sous 1 Mo, 4 sous 10 Mo.
 
 Justification des notes :
 
-- A (legacy) : le tableau est le plus lisible, le plus robuste et le moins coûteux à mettre en oeuvre. Il n'ajoute toutefois aucune structure de recherche et son temps de requête croît linéairement : 1 488,5 ms à 996 844 scans. Sa mémoire de construction est négligeable (1 à 4 Ko).
-- B (Set) : le Set refuse rapidement un numéro inconnu, mais les numéros connus parcourent encore tous les scans. Il atteint 964,4 ms à 996 844 scans et sa construction consomme 290,31 ms et 5 122 Ko. La logique reste simple, mais elle duplique une partie de l'information sans stocker directement le dernier scan.
-- C (Map) : la Map associe chaque numéro au dernier scan et permet une lecture en temps quasi constant : 0,1 ms à 996 844 scans. Elle est correcte sur les doublons grâce à `plusRecent`, mais sa construction est la plus coûteuse (764,89 ms) et sa mémoire atteint 7 170 Ko. Le code reste court et ne nécessite aucune dépendance.
+- Temps : 1 488,5 ms / 100 = 14,9 ms par requête, fois 13 = 193 ms pour le tableau, note 2. 964,4 ms / 100 = 9,6 ms, fois 13 = 125 ms pour le Set, note 2. La Map met 0,06 ms pour le lot, soit moins de 0,001 ms par requête, note 5. La construction, une fois, coûte 0,02 ms, 290 ms et 765 ms : elle ne change pas ces notes, la page fait 40 000 requêtes par jour.
+- Mémoire : 1 Ko pour le tableau, note 5. 5 122 Ko (5 Mo) pour le Set et 7 170 Ko (7 Mo) pour la Map, tous les deux sous 10 Mo et au-dessus de 1 Mo, note 4.
+- Lisibilité, on part de 5 et une idée à connaître coûte un point : tableau 5, le parcours se lit tel quel ; Set 4, l'ensemble des numéros connus ; Map 4, le numéro vers son dernier scan.
+- Robustesse : tableau 4, rien à tenir à jour, le format du numéro n'est pas vérifié. Set 3 et Map 3, la structure est à tenir à jour quand les scans arrivent. Les trois répondent pareil sur le jeu mesuré (somme `5a720532`).
+- Coût : tableau 5, rien ne change. Set 4 et Map 4, quelques lignes et une structure fournie par le langage, aucune dépendance.
 
 ## 3. La sensibilité
 
-Avec un poids du temps à 5 et celui de la lisibilité à 1, les totaux deviennent A = 30, B = 28 et C = 40 : la décision ne change pas, la Map reste retenue. La décision n'est donc pas fragile autour des poids choisis ; même le coût de construction plus élevé de la Map ne compense pas son avantage sur 40 000 requêtes quotidiennes.
+Les poids du ticket sont déjà un temps à 5 et une lisibilité à 1 : A = 34, B = 29, C = 44. La Map reste première, et le Set ne peut pas la passer : ils sont notés pareil partout sauf sur le temps.
+
+La décision ne bascule pas près de ces poids. Elle se retourne si le temps tombe à 2 et si ces trois points vont à la lisibilité (poids 4) : A = 43, B = 35, C = 41. Avec le temps encore à 3 et la lisibilité à 3, la Map mène 42 contre 40.

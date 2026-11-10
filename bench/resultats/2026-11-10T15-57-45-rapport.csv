@@ -1,0 +1,6 @@
+variante;taille;repetition;duree_ms;memoire_ko;controle
+quickselect;3000000;1;119.436;5000;1f2ec5a2
+quickselect;3000000;2;121.407;5008;1f2ec5a2
+quickselect;3000000;3;84.157;238;1f2ec5a2
+quickselect;3000000;4;85.653;238;1f2ec5a2
+quickselect;3000000;5;92.137;238;1f2ec5a2
