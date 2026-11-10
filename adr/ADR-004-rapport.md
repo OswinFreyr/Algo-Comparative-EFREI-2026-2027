@@ -26,17 +26,19 @@ Le premier jour ouvré du mois, à 6h, un cron lance sur la VM du site le rappor
 
 À trois millions de lignes, le tri dépasse le tas 208 fois en mémoire et 15 fois en temps : c'est l'écart de mémoire qui répond au ticket.
 
-Relance du tas et du quickselect seuls, 9 répétitions (`bench/resultats/2026-11-10T14-46-57-rapport.csv`) : 97,8 ms contre 97,4 ms. Leur écart de temps du premier lancement (78 contre 100 ms) ne dépasse donc pas le bruit d'un lancement à l'autre. Cette relance a relevé 52 Mo pour les deux, relevé jugé absurde (le tas ne garde que 1 900 totaux et cent cases) : nous gardons la plus petite valeur positive des deux lancements, 0,3 Mo pour le tas et 19,5 Mo pour le quickselect.
+Un second lancement complet (`bench/resultats/2026-11-10T15-44-04-rapport.csv`) redonne les mêmes ordres de grandeur à trois millions de lignes : tri 1 077,3 ms et 66,5 Mo, tas 80,4 ms et 0,3 Mo, quickselect 100,5 ms et 19,5 Mo.
+
+Relance du tas et du quickselect seuls, 9 répétitions (`bench/resultats/2026-11-10T14-46-57-rapport.csv`) : 97,8 ms contre 97,4 ms. Leur écart de temps des lancements complets (80 contre 100 ms) ne tient donc pas d'une configuration de lancement à l'autre : nous les tenons pour équivalents en temps. Cette relance a relevé 52 Mo pour les deux, relevé jugé absurde (le tas ne garde que 1 900 totaux et cent cases) : nous gardons la plus petite valeur positive, 0,3 Mo pour le tas et 19,5 Mo pour le quickselect.
 
 Courbe : `bench/resultats/2026-11-10T14-46-34-rapport.svg`.
 
 ## 4. Décision
 
-Nous adoptons l'option B (`tas`), total pondéré 45 contre 40 pour le legacy et 36 pour `quickselect` (`adr/GRILLE-ADR-004.md`), parce que la mémoire, qui pèse 4, est le critère du ticket et qu'il y prend 208 fois moins que le tri ; face au quickselect, qui le vaut sur le temps, c'est le pire cas garanti et la lisibilité qui départagent.
+Nous adoptons l'option B (`tas`), total pondéré 45 contre 40 pour le legacy et 37 pour `quickselect` (`adr/GRILLE-ADR-004.md`), parce que la mémoire, qui pèse 4, est le critère du ticket et qu'il y prend 208 fois moins que le tri ; face au quickselect, qui le vaut sur le temps, c'est le pire cas garanti et la lisibilité qui départagent.
 
 ## 5. Conséquences et limites
 
-Le code demande de connaître le tas et son sommet inversé, et s'appuie sur le tas de l'atelier 6. Le chargement des lignes n'est pas mesuré : le banc les charge toutes avant le chronomètre, soit quelques centaines de Mo, et le legacy fait de même ; si c'est ce chargement qui sature la VM, changer le calcul ne suffira pas, il faudra aussi lire le fichier en flux et additionner au passage. Le relevé de mémoire est instable d'un lancement à l'autre (0,3 Mo puis 52 Mo pour le tas) : l'écart avec le tri repose aussi sur la lecture du code, le tri copie trois millions de lignes, le tas non. Non mesuré : la VM du site, la mémoire de pointe du processus entier.
+Le code demande de connaître le tas et son sommet inversé, et s'appuie sur le tas de l'atelier 6. Le chargement des lignes n'est pas mesuré : le banc les charge toutes avant le chronomètre, soit quelques centaines de Mo, et le legacy fait de même ; si c'est ce chargement qui sature la VM, changer le calcul ne suffira pas, il faudra aussi lire le fichier en flux et additionner au passage. Le relevé de mémoire dépend de la configuration du lancement (0,3 Mo pour le tas dans les deux lancements complets, 52 Mo quand il est lancé seul avec le quickselect) : l'écart avec le tri repose aussi sur la lecture du code, le tri copie trois millions de lignes, le tas non. Non mesuré : la VM du site, la mémoire de pointe du processus entier.
 
 Domaine de validité : nous avons fait varier le nombre de lignes (100 000, 1 000 000 et 3 000 000). Nous n'avons pas fait varier le nombre de clients (1 900) ni K (100). La mémoire du tas suit le nombre de clients, pas de lignes : 306 ko pour 1 900 clients, soit 0,16 ko par client ; la Map des totaux passerait 10 Mo, et la note 5 de mémoire, vers 62 000 clients, 33 fois le portefeuille actuel.
 
