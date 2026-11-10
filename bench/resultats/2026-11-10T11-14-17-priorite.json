@@ -1,0 +1,27 @@
+{
+  "sujet": "priorite",
+  "jeu": "grande",
+  "tailles": [
+    1000,
+    9000,
+    15000
+  ],
+  "variantes": [
+    "tableau",
+    "tas",
+    "seaux"
+  ],
+  "repetitions": 5,
+  "echauffement": 2,
+  "chauffe_max_ms": 5000,
+  "statistique": "médiane",
+  "machine": {
+    "processeur": "Apple M3 Pro",
+    "coeurs": 11,
+    "memoire_go": 18,
+    "systeme": "Darwin 27.3.0",
+    "node": "v24.14.1"
+  },
+  "date": "2026-11-10T11:14:17.996Z",
+  "csv": "bench/resultats/2026-11-10T11-14-17-priorite.csv"
+}
