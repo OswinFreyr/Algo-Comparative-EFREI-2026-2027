@@ -100,6 +100,19 @@ export class IndexTrigrammes {
     //    dans tous les cas, augmenter this.compteurs[rang] de 1.
     // 2. Pour chaque rang de `touches` : garderMeilleurs(meilleurs, rang, similarite(compteur, ts.length,
     //    this.nbTrigrammes[rang]), k), puis remettre son compteur à zéro pour la requête suivante.
+    
+    for (const t of ts) {
+      const numero = this.numero.get(t);
+      if (numero === undefined) continue;
+      for (const rang of this.listes[numero]) {
+        if (this.compteurs[rang] === 0) touches.push(rang);
+        this.compteurs[rang]++;
+      }
+    }
+    for (const rang of touches) {
+      garderMeilleurs(meilleurs, rang, similarite(this.compteurs[rang], ts.length, this.nbTrigrammes[rang]), k);
+      this.compteurs[rang] = 0;
+    }
 
     return meilleurs.map(m => m.rang);
   }

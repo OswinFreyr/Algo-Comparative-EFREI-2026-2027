@@ -1,0 +1,26 @@
+{
+  "sujet": "graphe",
+  "jeu": "graphe",
+  "tailles": [
+    5000,
+    20000,
+    46565
+  ],
+  "variantes": [
+    "listes",
+    "compacts"
+  ],
+  "repetitions": 5,
+  "echauffement": 5,
+  "chauffe_max_ms": 5000,
+  "statistique": "médiane",
+  "machine": {
+    "processeur": "AMD Ryzen 7 7435HS",
+    "coeurs": 16,
+    "memoire_go": 16,
+    "systeme": "Windows_NT 10.0.19045",
+    "node": "v22.20.0"
+  },
+  "date": "2026-11-12T14:52:05.333Z",
+  "csv": "bench\\resultats\\2026-11-12T14-52-05-graphe.csv"
+}
