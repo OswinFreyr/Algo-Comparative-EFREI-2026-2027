@@ -1,0 +1,26 @@
+{
+  "sujet": "graphe",
+  "jeu": "graphe",
+  "tailles": [
+    1000,
+    2000,
+    5000
+  ],
+  "variantes": [
+    "matrice",
+    "listes"
+  ],
+  "repetitions": 3,
+  "echauffement": 2,
+  "chauffe_max_ms": 5000,
+  "statistique": "médiane",
+  "machine": {
+    "processeur": "Apple M3 Pro",
+    "coeurs": 11,
+    "memoire_go": 18,
+    "systeme": "Darwin 27.3.0",
+    "node": "v24.14.1"
+  },
+  "date": "2026-11-12T14:41:53.404Z",
+  "csv": "bench/resultats/2026-11-12T14-41-53-graphe.csv"
+}
