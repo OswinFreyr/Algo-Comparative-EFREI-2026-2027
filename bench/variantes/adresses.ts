@@ -94,6 +94,18 @@ export class IndexTrigrammes {
     const touches: number[] = [];
     const meilleurs: { rang: number; sim: number }[] = [];
 
+    ts.forEach(t => {
+      const numero = this.numero.get(t);
+      if(numero === undefined) return;
+      for(const rang of this.listes[numero]) {
+        if(this.compteurs[rang] === 0) touches.push(rang);
+        this.compteurs[rang]++;
+      }
+    })
+    for(const rang of touches) {
+        garderMeilleurs(meilleurs, rang, similarite(this.compteurs[rang], ts.length, this.nbTrigrammes[rang]), k);
+        this.compteurs[rang] = 0;
+    }
     // À COMPLÉTER (atelier 8) : compter, pour chaque adresse, les trigrammes qu'elle partage avec la saisie.
     // 1. Pour chaque trigramme t de la saisie connu de l'index (this.numero.get(t) rend son numéro), parcourir
     //    la liste this.listes[numéro] : à la première rencontre d'un rang (compteur à 0), l'ajouter à `touches` ;
