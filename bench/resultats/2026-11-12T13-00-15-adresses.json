@@ -1,0 +1,25 @@
+{
+  "sujet": "adresses",
+  "jeu": "petite",
+  "tailles": [
+    1,
+    2,
+    3
+  ],
+  "variantes": [
+    "brute"
+  ],
+  "repetitions": 3,
+  "echauffement": 0,
+  "chauffe_max_ms": 5000,
+  "statistique": "médiane",
+  "machine": {
+    "processeur": "Apple M1 Pro",
+    "coeurs": 8,
+    "memoire_go": 16,
+    "systeme": "Darwin 24.6.0",
+    "node": "v22.22.3"
+  },
+  "date": "2026-11-12T13:00:15.067Z",
+  "csv": "bench/resultats/2026-11-12T13-00-15-adresses.csv"
+}

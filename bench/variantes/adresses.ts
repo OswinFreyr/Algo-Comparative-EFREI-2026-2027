@@ -101,6 +101,21 @@ export class IndexTrigrammes {
     // 2. Pour chaque rang de `touches` : garderMeilleurs(meilleurs, rang, similarite(compteur, ts.length,
     //    this.nbTrigrammes[rang]), k), puis remettre son compteur à zéro pour la requête suivante.
 
+    // 1. Boucle d'adresse
+    for (const t of ts) {
+      const numero = this.numero.get(t);
+      if (numero === undefined) continue;
+      for (const rang of this.listes[numero]) {
+        if (this.compteurs[rang] === 0) touches.push(rang);
+        this.compteurs[rang]++;
+      }
+    }
+    // 2. Boucle de trigrammes
+    for (const rang of touches) {
+      garderMeilleurs(meilleurs, rang, similarite(this.compteurs[rang], ts.length, this.nbTrigrammes[rang]), k);
+      this.compteurs[rang] = 0;
+    }
+
     return meilleurs.map(m => m.rang);
   }
 
@@ -114,7 +129,7 @@ export class IndexTrigrammes {
 
 // ---------- variante "postgres" : pg_trgm dans PGlite ----------
 export class BaseAdresses {
-  private constructor(private readonly db: PGlite, readonly libelles: string[], readonly ids: string[]) {}
+  private constructor(private readonly db: PGlite, readonly libelles: string[], readonly ids: string[]) { }
 
   // Crée la base, charge le référentiel et construit l'index GiST de trigrammes.
   static async construire(referentiel: AdresseReferentiel[]): Promise<BaseAdresses> {
