@@ -15,7 +15,11 @@
     "couples": "tsx bench/couples.ts",
     "courbe": "tsx bench/courbe.ts",
     "test": "node --import tsx --test --test-reporter=spec tests/*.test.ts",
-    "verifier": "tsx outils/verifier.ts"
+    "verifier": "tsx outils/verifier.ts",
+    "exactitude": "node --expose-gc --import tsx bench/exactitude.ts",
+    "pont": "tsx bench/pont.ts",
+    "voyageur": "tsx bench/voyageur.ts",
+    "graphe": "tsx bench/graphe-infos.ts"
   },
   "engines": {
     "node": ">=20"
@@ -24,5 +28,8 @@
     "@types/node": "^26.6.2",
     "tsx": "^4.23.13",
     "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "^0.5.13"
   }
 }

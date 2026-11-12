@@ -158,6 +158,46 @@ bench/sujets/                suivi, suivi-construction, priorite, priorite-arriv
 Le fichier `mois/facturation.csv` : `id;jour;client_id;type;montant_centimes`, une ligne par prestation facturée
 (suivi, livraison, prise en charge, retour, supplément), pour les 1 900 comptes professionnels d'Efrei (pièce 01), graine 2026.
 
+## Journée 4 (jeudi 12 novembre) : retrouver, ranger, parcourir
+
+Une dépendance de plus : PGlite, PostgreSQL compilé pour tourner dans Node, avec l'extension pg_trgm. Rien à
+installer en dehors de `npm install`, sous Windows, macOS et Linux (Node 20 ou plus récent).
+
+| Commande | Ce qu'elle fait |
+| --- | --- |
+| `npm run exactitude -- --saisie "ste catherine 33000 bordeaux"` | Ce que répond chaque façon de rapprocher une adresse, pour une saisie libre |
+| `npm run exactitude` | L'exactitude des trois variantes contre `verite.csv`, par sorte de saisie, et la taille des index (atelier 8) |
+| `npm run exactitude -- --referentiel gironde --requetes 100 --requetes-brute 2` | La même chose sur le référentiel de la Gironde entière (730 137 adresses, 3 minutes environ) |
+| `npm run bench -- --sujet adresses --variantes brute --tailles 1,2,3 --repetitions 3` | Le coût d'une requête de la force brute (plusieurs secondes par saisie) |
+| `npm run bench -- --sujet adresses --variantes trigrammes,postgres --tailles 10,20,50 --repetitions 3 --echauffement 1` | Le coût d'une requête des deux index |
+| `npm run bench -- --sujet adresses-index --repetitions 3` | Le coût de construction des deux index, jusqu'au référentiel entier |
+| `npm run graphe` | Le réseau routier de la métropole, et ce que coûterait sa matrice d'adjacence (atelier 9) |
+| `npm run bench -- --sujet graphe --variantes matrice,listes --tailles 1000,2000,5000 --repetitions 3 --echauffement 2` | Matrice et listes sur des sous-graphes croissants autour du hub de Brienne |
+| `npm run bench -- --sujet graphe --variantes listes,compacts --tailles 5000,20000,46565 --repetitions 5 --echauffement 5` | Les listes à l'échelle de la métropole entière |
+| `npm run pont` | Le 8 septembre à 14h02, le pont Chaban-Delmas se lève : les tournées touchées, le détour, le temps du recalcul (atelier 10, une fois Dijkstra avec tas complété) |
+| `npm run bench -- --sujet chemins --variantes simple,tas --tailles 1,2 --repetitions 3` | Dijkstra sans tas, plusieurs secondes par tournée |
+| `npm run bench -- --sujet chemins --variantes tas,astar --tailles 1,5,23 --repetitions 5 --echauffement 3` | Dijkstra avec tas et A* sur les 23 tournées à recalculer |
+| `npm run voyageur` | Tous les ordres possibles des arrêts d'une tournée, de 6 à 11 arrêts, puis 15 et 40 au même rythme |
+
+Les nouveaux fichiers :
+
+```
+bench/exactitude.ts         l'exactitude des rapprochements d'adresses (atelier 8)
+bench/graphe-infos.ts       npm run graphe
+bench/pont.ts               npm run pont
+bench/voyageur.ts           npm run voyageur
+bench/graphe/               le graphe routier : lecture, accrochage d'un point GPS, sous-graphe, scénario du 8 septembre
+bench/sujets/               adresses, adresses-index, graphe, chemins
+bench/variantes/            adresses (brute, trigrammes, postgres), representations (matrice, listes, compacts),
+                            chemins (simple, tas, astar ; deux À COMPLÉTER : le relâchement de Dijkstra avec tas,
+                            la priorité de A* ; le tas est celui de l'atelier 6, bench/variantes/tas.ts)
+data/referentiel/graphe/    le réseau routier de Bordeaux Métropole (OpenStreetMap, licence ODbL) : noeuds.csv.gz, aretes.csv.gz
+data/generateur/preparer_graphe.py   comment il a été préparé (Python, pyosmium ; vous n'avez pas à le lancer)
+```
+
+Licences : la Base Adresse Nationale est sous Licence Ouverte 2.0 (Etalab) ; le réseau routier vient
+d'OpenStreetMap, (c) les contributeurs d'OpenStreetMap, sous licence ODbL 1.0 (data/referentiel/graphe/LICENCE_OSM.txt).
+
 ## Règles
 
 - Le dossier `legacy/` ne se modifie pas : c'est la référence, on la mesure et on la compare.

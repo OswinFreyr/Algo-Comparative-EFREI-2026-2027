@@ -1,0 +1,6 @@
+Réseau routier de Bordeaux Métropole, tiré d'OpenStreetMap.
+Données : (c) les contributeurs d'OpenStreetMap, sous licence Open Database License (ODbL) 1.0.
+https://www.openstreetmap.org/copyright - https://opendatacommons.org/licenses/odbl/1-0/
+Source : extrait de la Gironde, https://download.openstreetmap.fr/extracts/europe/france/aquitaine/gironde-latest.osm.pbf
+Version de l'extrait : 2026-10-29T01:31:51Z. Préparation : data/generateur/preparer_graphe.py (Python, pyosmium), le 29 octobre 2026.
+Base de données dérivée, diffusée sous la même licence ODbL 1.0.
