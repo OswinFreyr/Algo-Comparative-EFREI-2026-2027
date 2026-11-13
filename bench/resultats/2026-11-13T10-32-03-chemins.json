@@ -1,0 +1,26 @@
+{
+  "sujet": "chemins",
+  "jeu": "moyenne",
+  "tailles": [
+    1,
+    5,
+    23
+  ],
+  "variantes": [
+    "tas",
+    "astar"
+  ],
+  "repetitions": 5,
+  "echauffement": 3,
+  "chauffe_max_ms": 5000,
+  "statistique": "médiane",
+  "machine": {
+    "processeur": "AMD Ryzen 7 7435HS",
+    "coeurs": 16,
+    "memoire_go": 16,
+    "systeme": "Windows_NT 10.0.19045",
+    "node": "v22.20.0"
+  },
+  "date": "2026-11-13T10:32:03.248Z",
+  "csv": "bench\\resultats\\2026-11-13T10-32-03-chemins.csv"
+}
