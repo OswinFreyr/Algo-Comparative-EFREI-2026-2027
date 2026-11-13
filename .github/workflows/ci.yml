@@ -32,3 +32,21 @@ jobs:
           cache: npm
       - run: npm ci --ignore-scripts
       - run: npm test
+
+  # One check per workshop. A checker that needs the unversioned data sets
+  # reports KO here even when the workshop is done locally.
+  verifier:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        atelier: [2, 3, 4, 5, 6, 7, 8, 9, 10]
+    name: verifier (atelier ${{ matrix.atelier }})
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run verifier -- ${{ matrix.atelier }}
