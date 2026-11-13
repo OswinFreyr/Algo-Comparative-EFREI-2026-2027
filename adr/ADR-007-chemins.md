@@ -36,7 +36,7 @@ Courbe : `bench/resultats/2026-11-13T13-34-22-chemins.svg` (`npm run courbe -- b
 
 ## 4. Décision
 
-Nous adoptons l'option B (`tas`), total pondéré 44 contre 38 pour A* et 35 pour Dijkstra sans tas (`adr/GRILLE-ADR-007.md`) : les 23 tournées sont recalculées en 116 ms, au mètre près, et à temps égal devant le barème c'est la robustesse qui écarte A*, juste seulement tant que le vol d'oiseau ne surestime jamais la route.
+Nous adoptons l'option B (`tas`), total pondéré 46 contre 40 pour A* et 38 pour Dijkstra sans tas (`adr/GRILLE-ADR-007.md`) : les 23 tournées sont recalculées en 116 ms, au mètre près, et à temps égal devant le barème c'est la robustesse qui écarte A*, juste seulement tant que le vol d'oiseau ne surestime jamais la route.
 
 ## 5. Conséquences et limites
 

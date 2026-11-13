@@ -20,9 +20,9 @@ Option A : `simple`, Dijkstra sans tas. Option B : `tas`, Dijkstra avec le tas b
 
 | Option | Temps | Mémoire | Lisibilité | Robustesse | Coût | Total pondéré |
 | --- | --- | --- | --- | --- | --- | --- |
-| A (simple) | 2 | 5 | 4 | 5 | 4 | 35 |
-| B (tas) | 5 | 5 | 3 | 5 | 3 | 44 |
-| C (astar) | 5 | 5 | 2 | 3 | 3 | 38 |
+| A (simple) | 2 | 5 | 5 | 5 | 5 | 38 |
+| B (tas) | 5 | 5 | 4 | 5 | 3 | 46 |
+| C (astar) | 5 | 5 | 3 | 3 | 3 | 40 |
 
 Total pondéré = 4 x Temps + 1 x Mémoire + 2 x Lisibilité + 2 x Robustesse + 1 x Coût.
 
@@ -41,12 +41,12 @@ Justification rapide des notes :
 - Temps A : mesuré à une tournée (3,7 s) et à deux (6,2 s), pas à 23. Estimé pour les 23 : de 71 s à 85 s ; au-dessus de 1 min et sous 11 min, note 2.
 - Temps B : 116 ms pour les 23 tournées, sous 1 s, note 5. Temps C : 209 ms, sous 1 s, note 5 ; A* est 1,8 fois plus lent que le tas, mais les deux sont sous le seuil.
 - Mémoire : A 0,6 Mo à une tournée, B 29,5 Mo à 23, C 25,2 Mo à 23 ; les trois sous 50 Mo, note 5.
-- Lisibilité : A 4, une idée, fixer à chaque tour le carrefour non fixé le plus proche du départ. B 3, deux idées : la même, et le tas avec ses entrées périmées (un carrefour peut y être plusieurs fois, seule sa première sortie compte). C 2, trois idées : les deux précédentes, et l'heuristique avec sa condition (le vol d'oiseau ne doit jamais dépasser la route) ; l'arrêt visé est en plus dans la priorité, une recherche par arrêt.
+- Lisibilité : A 5, rien à connaître que Dijkstra lui-même, le prochain carrefour se trouve en relisant tous les autres. B 4, une idée : le tas et ses entrées périmées (un carrefour peut y être plusieurs fois, seule sa première sortie compte). C 3, deux idées : ce tas, et l'heuristique avec sa condition (le vol d'oiseau ne doit jamais dépasser la route) ; l'arrêt visé est dans la priorité, une recherche par arrêt.
 - Robustesse : `npm test` passe pour les trois tests des plus courts chemins. A 5, c'est la référence. B 5 : même somme de contrôle que A à une et deux tournées, aucune hypothèse. C 3 : même somme de contrôle que B à 1, 5 et 23 tournées, mais seulement parce que le vol d'oiseau ne surestime jamais la route ; à revoir si l'unité des longueurs change ou si l'on passe des mètres aux minutes.
-- Coût : A 4, la méthode est écrite, quelques lignes pour la brancher, rien d'autre à maintenir. B 3 : quatre lignes écrites, et le tas de l'atelier 6 à réutiliser et à maintenir. C 3 : deux priorités changées, le tas et le vol d'oiseau à réutiliser et à maintenir.
+- Coût : A 5, la méthode est écrite en entier, rien à écrire. B 3 : quatre lignes écrites, et le tas de l'atelier 6 à réutiliser et à maintenir. C 3 : deux priorités changées, le tas et le vol d'oiseau à réutiliser et à maintenir.
 
 ## 3. La sensibilité
 
-Avec le poids du temps à 5 et celui de la lisibilité à 1 (mémoire 1, robustesse 2, coût 1) : A 33, B 46, C 41. La décision ne change pas, B reste premier.
+Avec le poids du temps à 5 et celui de la lisibilité à 1 (mémoire 1, robustesse 2, coût 1) : A 35, B 47, C 42. La décision ne change pas, B reste premier.
 
-Entre B et C, aucun poids ne retourne la décision : les deux ont les mêmes notes de temps, de mémoire et de coût, et B est devant sur la lisibilité (+ 1) et la robustesse (+ 2). Il faudrait qu'A* gagne deux notes de temps sur le tas pour passer devant (8 points contre 6), ce qu'aucune de nos mesures n'approche. Entre B et A, l'écart vaut 3 x poids du temps - poids de la lisibilité - poids du coût, soit + 9 avec les poids du ticket : A ne passe devant que si la lisibilité et le coût pèsent ensemble plus de trois fois le temps, par exemple temps 1, mémoire 1, lisibilité 4, robustesse 2, coût 2, où A l'emporte 41 contre 38. La décision est solide.
+Entre B et C, aucun poids ne retourne la décision : les deux ont les mêmes notes de temps, de mémoire et de coût, et B est devant sur la lisibilité (+ 1) et la robustesse (+ 2). Il faudrait qu'A* gagne deux notes de temps sur le tas pour passer devant (8 points contre 6), ce qu'aucune de nos mesures n'approche. Entre B et A, l'écart vaut 3 x poids du temps - poids de la lisibilité - 2 x poids du coût, soit + 8 avec les poids du ticket : A ne passe devant que si la lisibilité et deux fois le coût pèsent ensemble plus de trois fois le temps, par exemple temps 1, mémoire 1, lisibilité 4, robustesse 2, coût 2, où A l'emporte 47 contre 42. La décision est solide.
