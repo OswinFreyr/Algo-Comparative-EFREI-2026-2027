@@ -11,7 +11,7 @@ Ticket T-0531 : les tournées calculées font 40 % de kilomètres de plus que ce
 - Option A (legacy) : les arrêts dans l'ordre d'affectation. Complexité annoncée : O(n), rien à calculer.
 - Option B (`voisin`) : le plus proche voisin ; depuis le hub, aller à l'arrêt non visité le plus proche, et ainsi de suite. Complexité annoncée : O(n²).
 - Option C (`deuxopt`) : le 2-opt ; partir du plus proche voisin et décroiser deux arêtes tant qu'un échange raccourcit la tournée. Complexité annoncée : O(n²) par passe, autant de passes que d'échanges.
-- Option D (`recuit`) : le recuit simulé ; partir du plus proche voisin, inverser un morceau tiré au hasard, accepter aussi des échanges qui allongent, de moins en moins souvent. Complexité annoncée : proportionnelle au budget de pas, quel que soit n. Son protocole : 60 000 pas, température de départ 2 000 m, multipliée par 0,99985 à chaque pas, graine 20261213 ; sans la graine et le budget, la mesure n'est pas rejouable.
+- Option D (`recuit`) : le recuit simulé ; partir du plus proche voisin, inverser un morceau tiré au hasard, accepter aussi des échanges qui allongent, de moins en moins souvent. Complexité annoncée : O(pas x n) au pire, un morceau à inverser par pas accepté ; le budget de pas est fixé, quelle que soit la qualité atteinte. Son protocole : 60 000 pas, température de départ 2 000 m, multipliée par 0,99985 à chaque pas, graine 20261213 ; sans la graine et le budget, la mesure n'est pas rejouable.
 
 ## 3. Mesures
 
