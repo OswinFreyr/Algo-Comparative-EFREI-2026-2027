@@ -1,0 +1,26 @@
+{
+  "sujet": "adresses",
+  "jeu": "petite",
+  "tailles": [
+    10,
+    20,
+    50
+  ],
+  "variantes": [
+    "trigrammes",
+    "postgres"
+  ],
+  "repetitions": 3,
+  "echauffement": 1,
+  "chauffe_max_ms": 5000,
+  "statistique": "médiane",
+  "machine": {
+    "processeur": "Apple M3 Pro",
+    "coeurs": 11,
+    "memoire_go": 18,
+    "systeme": "Darwin 27.3.0",
+    "node": "v24.14.1"
+  },
+  "date": "2026-11-13T08:19:17.365Z",
+  "csv": "bench/resultats/2026-11-13T08-19-17-adresses.csv"
+}
