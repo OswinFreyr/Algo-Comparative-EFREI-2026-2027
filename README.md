@@ -198,6 +198,48 @@ data/generateur/preparer_graphe.py   comment il a été préparé (Python, pyosm
 Licences : la Base Adresse Nationale est sous Licence Ouverte 2.0 (Etalab) ; le réseau routier vient
 d'OpenStreetMap, (c) les contributeurs d'OpenStreetMap, sous licence ODbL 1.0 (data/referentiel/graphe/LICENCE_OSM.txt).
 
+## Journée 5 (vendredi 13 novembre) : choisir sans tout essayer
+
+Trois ateliers, dans l'ordre de la journée. Le matin, d'abord l'atelier 10 de la journée 4, qui n'a pas eu lieu jeudi :
+`bench/variantes/chemins.ts`, le relâchement de Dijkstra avec tas puis la priorité de A* (ses commandes sont dans la
+section de la journée 4). Ensuite l'atelier 11, la tournée de Noël (ADR-008), puis l'atelier 12, le vélo cargo (ADR-009),
+et leurs deux "À COMPLÉTER" : le gain d'un échange du 2-opt (atelier 11) et la règle de la case de la programmation
+dynamique (atelier 12). Rien de nouveau à installer. Le réseau routier de la journée 4 sert à l'atelier 11 : les
+distances par la route des 60 tournées sont calculées une fois, par le Dijkstra avec tas de l'atelier 10 (une vingtaine
+de secondes), et gardées dans `data/jeux/moyenne/cache-tournees-40.json`. Tant que ce Dijkstra n'est pas juste, les
+commandes de l'atelier 11 s'arrêtent sur un message qui dit où trouver le fichier corrigé.
+
+| Commande | Ce qu'elle fait |
+| --- | --- |
+| `npm run noel -- --tournees 5` | Atelier 11 : cinq tournées de 40 arrêts, l'ordre d'affectation du legacy puis les trois variantes, sur la même matrice par la route (ticket T-0531) |
+| `npm test` | Atelier 11 : le 2-opt décroise sans rallonger ; atelier 12 : la programmation dynamique rend les points du backtracking et respecte les deux capacités |
+| `npm run bench -- --sujet tournees --variantes voisin,deuxopt,recuit --tailles 1,5,20 --repetitions 3 --echauffement 1` | Atelier 11 : le temps des trois variantes, de 1 à 20 tournées |
+| `npm run noel` | Atelier 11 : les 60 tournées, les kilomètres de chaque variante, ce que la flotte économise par jour ; `--pas 200000` pour donner plus de pas au recuit (60 000 par défaut) |
+| `npm run noel -- --arrets 9` | Atelier 11 : sur neuf arrêts, l'optimum par force brute et l'écart de chaque variante |
+| `npm run noel -- --tournee L007 --trace` | Une tournée : les ordres, chaque échange du 2-opt, la courbe du recuit, et la ligne `[noel-trace]` que le diaporama relit |
+| `npm run verifier -- 11` | Le correcteur de l'atelier 11 |
+| `npm run cargo -- --tournees 5` | Atelier 12 : la première vague de cinq vélos cargo, chargée par le legacy (premier arrivé, premier chargé) puis par les trois variantes (ticket T-0655) |
+| `npm run bench -- --sujet chargement --variantes glouton,dynamique,backtracking --tailles 1,5,20 --repetitions 3 --echauffement 1` | Atelier 12 : le temps des trois variantes, de 1 à 20 tournées |
+| `npm run cargo` | Atelier 12 : la qualité sur les 60 tournées : points d'urgence, colis pharmacie en première vague, écart au meilleur ; `--detail` pour les poids réels, `--tournee L007 --detail` pour les colis pris, `--points 10,5,1` pour un autre barème (pharmacie, express, standard) |
+| `npm run verifier -- 12` | Le correcteur de l'atelier 12 |
+| `npm run nuit` | La nuit du 24 septembre rejouée sur le jeu moyenne : le legacy, puis le batch avec les décisions des journées 2 à 5 (`--etapes affectation,tournees,chargement` pour sauter l'étape 1) |
+
+Les nouveaux fichiers :
+
+```
+bench/cargo.ts               npm run cargo (atelier 12)
+bench/noel.ts                npm run noel (atelier 11)
+bench/nuit.ts                npm run nuit (la nuit rejouée)
+bench/sujets/                chargement, tournees (la préparation des distances par la route et son cache)
+bench/variantes/             chargement (glouton, dynamique : À COMPLÉTER, backtracking),
+                             tournees (voisin, deuxopt : À COMPLÉTER, recuit)
+tests/                       chargement.test.ts, tournees.test.ts
+```
+
+Le rendu de fin d'atelier, comme chaque jour : le code, les mesures (les CSV de `bench/resultats/`), la grille
+`adr/GRILLE-ADR-008.md` puis `adr/GRILLE-ADR-009.md`, l'ADR en premier jet.
+Le correcteur sans KO avant 17h00, le commit du binôme à 17h00.
+
 ## Règles
 
 - Le dossier `legacy/` ne se modifie pas : c'est la référence, on la mesure et on la compare.

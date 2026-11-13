@@ -19,7 +19,10 @@
     "exactitude": "node --expose-gc --import tsx bench/exactitude.ts",
     "pont": "tsx bench/pont.ts",
     "voyageur": "tsx bench/voyageur.ts",
-    "graphe": "tsx bench/graphe-infos.ts"
+    "graphe": "tsx bench/graphe-infos.ts",
+    "cargo": "tsx bench/cargo.ts",
+    "noel": "tsx bench/noel.ts",
+    "nuit": "tsx bench/nuit.ts"
   },
   "engines": {
     "node": ">=20"
