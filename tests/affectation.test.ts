@@ -23,7 +23,7 @@ test("les variantes tri et map donnent le résultat du legacy", { skip: !existsS
   }
 });
 
-test("un lot vide donne des tournées vides", () => {
+test("un lot vide donne des tournées vides", { skip: !existsSync(join(dossier, "livreurs.csv")) && "générez le jeu petite : npm run data -- --echelle petite" }, () => {
   const livreurs = lireLivreurs(join(dossier, "livreurs.csv"));
   const hubs = lireHubs(join(dossier, "hubs.csv"));
   for (const nom of Object.keys(VARIANTES)) {
