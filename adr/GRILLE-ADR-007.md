@@ -34,13 +34,13 @@ Les barèmes, fixés avant de mesurer (ceux de la fiche atelier 10) :
 - Robustesse : 5 si la méthode rend les mêmes distances que Dijkstra au mètre, sans hypothèse sur les données ; 3 si elle n'est juste que sous une hypothèse à tenir ; 2 si elle rend des distances fausses en silence sur le scénario du pont ; 1 si `npm test` échoue.
 - Coût : 5 si rien n'est à écrire ; 4 pour quelques lignes sans structure à maintenir ; 3 pour quelques lignes et une structure du dépôt à réutiliser et à maintenir ; 2 pour une structure nouvelle dans l'équipe ; 1 si une dépendance s'ajoute.
 
-Mesures du 13 novembre : `bench/resultats/2026-11-13T10-59-18-chemins.csv` (`simple` et `tas`, 1 et 2 tournées, 3 répétitions, sans échauffement) et `bench/resultats/2026-11-13T11-06-01-chemins.csv` (`tas` et `astar`, 1, 5 et 23 tournées, médiane de 15 répétitions, 5 tours d'échauffement).
+Mesures du 13 novembre à 14h30 : `bench/resultats/2026-11-13T13-34-12-chemins.csv` (`simple` et `tas`, 1 et 2 tournées, 3 répétitions, sans échauffement) et `bench/resultats/2026-11-13T13-34-22-chemins.csv` (`tas` et `astar`, 1, 5 et 23 tournées, médiane de 5 répétitions, 3 tours d'échauffement). Les séries prises plus tôt le même jour, poste chargé, sont écartées.
 
 Justification rapide des notes :
 
-- Temps A : mesuré à une tournée (3,7 s) et à deux (21,4 s), pas à 23. Estimé pour les 23 : 86 s à partir d'une tournée, 4 min à partir de deux ; dans les deux cas entre 1 min et 11 min, note 2.
-- Temps B : 127 ms pour les 23 tournées, sous 1 s, note 5. Temps C : 221 ms, sous 1 s, note 5 ; A* est 1,7 fois plus lent que le tas, mais les deux sont sous le seuil.
-- Mémoire : A 0,8 Mo à deux tournées, B 29,5 Mo à 23, C 25,4 Mo à 23 ; les trois sous 50 Mo, note 5.
+- Temps A : mesuré à une tournée (3,7 s) et à deux (6,2 s), pas à 23. Estimé pour les 23 : de 71 s à 85 s ; au-dessus de 1 min et sous 11 min, note 2.
+- Temps B : 116 ms pour les 23 tournées, sous 1 s, note 5. Temps C : 209 ms, sous 1 s, note 5 ; A* est 1,8 fois plus lent que le tas, mais les deux sont sous le seuil.
+- Mémoire : A 0,6 Mo à une tournée, B 29,5 Mo à 23, C 25,2 Mo à 23 ; les trois sous 50 Mo, note 5.
 - Lisibilité : A 4, une idée, fixer à chaque tour le carrefour non fixé le plus proche du départ. B 3, deux idées : la même, et le tas avec ses entrées périmées (un carrefour peut y être plusieurs fois, seule sa première sortie compte). C 2, trois idées : les deux précédentes, et l'heuristique avec sa condition (le vol d'oiseau ne doit jamais dépasser la route) ; l'arrêt visé est en plus dans la priorité, une recherche par arrêt.
 - Robustesse : `npm test` passe pour les trois tests des plus courts chemins. A 5, c'est la référence. B 5 : même somme de contrôle que A à une et deux tournées, aucune hypothèse. C 3 : même somme de contrôle que B à 1, 5 et 23 tournées, mais seulement parce que le vol d'oiseau ne surestime jamais la route ; à revoir si l'unité des longueurs change ou si l'on passe des mètres aux minutes.
 - Coût : A 4, la méthode est écrite, quelques lignes pour la brancher, rien d'autre à maintenir. B 3 : quatre lignes écrites, et le tas de l'atelier 6 à réutiliser et à maintenir. C 3 : deux priorités changées, le tas et le vol d'oiseau à réutiliser et à maintenir.
