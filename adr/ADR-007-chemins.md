@@ -28,7 +28,7 @@ Ticket T-0733 : le 8 septembre à 14h02, le pont Chaban-Delmas se lève ; le leg
 
 Fichiers : `bench/resultats/2026-11-13T10-59-18-chemins.csv` (`simple` et `tas`, 1 et 2 tournées) et `bench/resultats/2026-11-13T11-06-01-chemins.csv` (`tas` et `astar`, 1, 5 et 23 tournées).
 
-Sans tas, une seule tournée prend 3,7 s, 410 fois plus qu'avec le tas, et la deuxième en prend 17,7 : le temps dépend de l'éloignement des arrêts, pas seulement du nombre de tournées. L'estimation pour les 23 va donc de 86 s (3,7 s par tournée) à 4 min (10,7 s par tournée) ; nous ne l'avons pas mesurée.
+Sans tas, une seule tournée prend des secondes, plusieurs centaines de fois plus qu'avec le tas. Cette mesure est instable sur notre poste : une seconde série (`bench/resultats/2026-11-13T13-26-53-chemins.csv`) donne 9,8 s pour une tournée au lieu de 3,7 s, et 20,5 s pour deux. L'estimation pour les 23 va donc de 86 s (3,7 s par tournée) à 4 min (10,7 s par tournée), dans la même tranche du barème aux deux bouts ; nous ne l'avons pas mesurée.
 
 L'échauffement compte ici. Une première série à 3 tours d'échauffement et 5 répétitions (`bench/resultats/2026-11-13T11-03-52-chemins.csv`) donnait 475 ms pour le tas et 827 ms pour A* à 23 tournées, trois à quatre fois plus : le code n'était pas encore compilé au moment de la mesure. Nous l'écartons et la gardons comme trace ; `npm run pont` (119 ms et 215 ms) et la série à 5 tours concordent.
 
