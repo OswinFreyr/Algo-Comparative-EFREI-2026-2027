@@ -16,12 +16,12 @@
   "chauffe_max_ms": 5000,
   "statistique": "médiane",
   "machine": {
-    "processeur": "Apple M3 Pro",
-    "coeurs": 11,
-    "memoire_go": 18,
-    "systeme": "Darwin 27.3.0",
-    "node": "v24.14.1"
+    "processeur": "Apple M1 Pro",
+    "coeurs": 8,
+    "memoire_go": 16,
+    "systeme": "Darwin 24.6.0",
+    "node": "v22.22.3"
   },
-  "date": "2026-11-13T14:50:24.352Z",
-  "csv": "bench/resultats/2026-11-13T14-50-24-tournees.csv"
+  "date": "2026-11-13T14:49:07.357Z",
+  "csv": "bench/resultats/2026-11-13T14-49-07-tournees.csv"
 }
