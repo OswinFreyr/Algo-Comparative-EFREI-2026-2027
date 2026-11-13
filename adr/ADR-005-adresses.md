@@ -18,8 +18,8 @@ Ce que répond chaque méthode à la saisie du ticket (`npm run exactitude -- --
 
 - Machine : Apple M3 Pro, 18 Go, Darwin 27.3.0, Node v24.14.1.
 - Jeux : les saisies du jeu `petite` contre le référentiel de la métropole (229 329 adresses), puis contre celui de la Gironde (730 137).
-- Répétitions et échauffement : 3 répétitions ; 1 tour d'échauffement pour les deux index, aucun pour la force brute ni pour la construction.
-- Statistique retenue : la médiane.
+- Répétitions et échauffement : au harness, 3 répétitions, 1 tour d'échauffement pour les deux index, aucun pour la force brute ni pour la construction ; à l'exactitude, une seule passe sur 300 saisies (10 pour la force brute).
+- Statistique retenue : la médiane pour le harness (construction, coût d'une saisie) ; la moyenne d'une passe pour l'exactitude, d'où vient la colonne « une saisie » du tableau.
 - Mesuré : le temps d'une saisie, index déjà construit ; les saisies justes comparées à la vérité du jeu ; la taille de chaque index, lue dans la colonne `index_mo` et non dans `memoire_ko` ; la durée de construction.
 
 | Option | Une saisie (ms) | Saisies justes sur 300 | Taille de l'index | Construction sur 229 329 adresses |
@@ -38,7 +38,7 @@ Les deux index retrouvent les mêmes saisies et ratent les mêmes : les neuf san
 
 Sur la Gironde (`bench/resultats/2026-11-13T08-21-44-exactitude.csv`, 100 saisies, 2 pour la force brute) : 5 327 ms par saisie pour la force brute, 33,9 ms pour `trigrammes` (96 justes sur 100, index de 164,2 Mo, construction 2,9 s), 323,6 ms pour `postgres` (96 sur 100, index de 137,7 Mo, construction 14,9 s).
 
-Pas de courbe : la taille du harness est ici un nombre de saisies, pas un volume.
+Courbe : `bench/resultats/2026-11-13T08-19-48-adresses-index.svg`, la construction des deux index de 10 000 à 229 329 adresses (`npm run courbe -- bench/resultats/2026-11-13T08-19-48-adresses-index.csv --log`). Pour 23 fois plus d'adresses, la construction de `trigrammes` prend 19 fois plus de temps, une croissance proche du linéaire annoncé ; celle de `postgres` 6 fois plus seulement, parce qu'un coût fixe de démarrage de la base domine aux petites tailles. Le coût d'une saisie n'est pas tracé : la taille du harness y est un nombre de saisies, pas un volume.
 
 ## 4. Décision
 
