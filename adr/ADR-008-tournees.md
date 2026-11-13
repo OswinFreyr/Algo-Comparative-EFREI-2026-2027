@@ -8,7 +8,7 @@ Les tournées calculées font 40 % de kilomètres de plus que celles que les liv
 
 - Option A (`legacy`) : visiter les arrêts dans l'ordre d'affectation, celui du code actuel. Aucune recherche. Complexité annoncée : un seul passage pour additionner les distances.
 - Option B (`voisin`) : depuis le dépôt, aller à l'arrêt le plus proche pas encore visité, et ainsi de suite. Complexité annoncée : O(n²).
-- Option C (`deuxopt`) : partir de cet ordre, puis inverser un morceau de tournée tant que l'échange raccourcit. On retire deux liens et on en ajoute deux autres ; on s'arrête quand plus aucun échange ne gagne. Complexité annoncée : quelques dizaines d'échanges sur 40 arrêts.
+- Option C (`deuxopt`) : partir de cet ordre, puis inverser un morceau de tournée tant que l'échange raccourcit. On retire deux liens et on en ajoute deux autres ; on s'arrête quand plus aucun échange ne gagne. Complexité annoncée : O(n²) par passe, une passe par échange ; quelques dizaines d'échanges sur 40 arrêts.
 - Option D (`recuit`) : le même point de départ, des échanges tirés au hasard, acceptés s'ils raccourcissent et sinon avec une probabilité qui baisse. Protocole rejouable : graine 20261213, 60 000 pas, température de départ 2 000 m, multipliée par 0,99985 à chaque pas. On rend le meilleur trajet rencontré. Complexité annoncée : 60 000 pas par tournée.
 
 ## 3. Mesures
