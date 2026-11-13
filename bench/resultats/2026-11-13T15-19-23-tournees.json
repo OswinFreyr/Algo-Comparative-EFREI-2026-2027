@@ -1,0 +1,27 @@
+{
+  "sujet": "tournees",
+  "jeu": "moyenne",
+  "tailles": [
+    1,
+    5,
+    20
+  ],
+  "variantes": [
+    "voisin",
+    "deuxopt",
+    "recuit"
+  ],
+  "repetitions": 3,
+  "echauffement": 1,
+  "chauffe_max_ms": 5000,
+  "statistique": "médiane",
+  "machine": {
+    "processeur": "AMD Ryzen 7 7435HS",
+    "coeurs": 16,
+    "memoire_go": 16,
+    "systeme": "Windows_NT 10.0.19045",
+    "node": "v22.20.0"
+  },
+  "date": "2026-11-13T15:19:23.488Z",
+  "csv": "bench\\resultats\\2026-11-13T15-19-23-tournees.csv"
+}
