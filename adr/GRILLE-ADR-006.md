@@ -22,7 +22,7 @@ Option A : `matrice`, la structure du legacy. Option B : `listes`. Option C : `c
 | --- | --- | --- | --- | --- | --- | --- |
 | A (matrice) | 1 | 1 | 4 | 2 | 4 | 20 |
 | B (listes) | 5 | 4 | 4 | 5 | 4 | 43 |
-| C (compacts) | 5 | 5 | 2 | 5 | 3 | 42 |
+| C (compacts) | 5 | 5 | 3 | 5 | 3 | 44 |
 
 Total pondéré = 2 x Temps + 4 x Mémoire + 2 x Lisibilité + 1 x Robustesse + 1 x Coût.
 
@@ -41,12 +41,12 @@ Justification rapide des notes :
 - Mémoire A : non mesurable à 46 565 carrefours, Node s'arrête à court de mémoire. Calculée (`npm run graphe`) : 2,17 milliards de cases, 16,2 Go, au-delà de 4 Go, note 1. Le calcul s'appuie sur la mesure : 191,5 Mo à 5 000 carrefours, soit 7,8 octets la case.
 - Mémoire B : 21,8 Mo, sous 100 Mo, note 4. Mémoire C : 6,6 Mo, sous 10 Mo, note 5. Les listes prennent 3,3 fois plus que les tableaux compacts, au-delà du facteur 2 : les deux notes sont distinctes.
 - Temps A : impossible à l'échelle de la métropole, note 1 ; déjà 56,6 ms à 5 000 carrefours. Temps B : 6,9 ms, note 5. Temps C : 1,7 ms, note 5 ; quatre fois plus rapide que les listes, mais les deux sont sous 10 ms.
-- Lisibilité : A 4, une idée, le tableau à deux dimensions dont on lit toute la ligne. B 4, une idée, le tableau de listes. C 2, trois idées : les trois tableaux rangés bout à bout, le tableau `debut` qui indexe les deux autres, la lecture de `debut[u]` à `debut[u + 1] - 1` ; retirer une rue oblige à décaler tout ce qui suit.
-- Robustesse : `npm test` passe pour les deux tests du réseau. A 2 : une seule case par paire de carrefours, le second de deux tronçons parallèles écrase le premier, en silence. B 5 et C 5 : une entrée par arête, les 111 288 sont gardées.
+- Lisibilité : A 4, une idée, le tableau à deux dimensions dont on lit toute la ligne. B 4, une idée, le tableau de listes. C 3, deux idées, celles que cite la fiche : le tableau `debut` qui indexe les deux autres, et la lecture de `debut[u]` à `debut[u + 1] - 1` ; retirer une rue oblige à décaler tout ce qui suit.
+- Robustesse : `npm test` passe pour les deux tests du réseau. A 2 : une seule case par paire de carrefours, le second de deux tronçons parallèles écrase le premier, en silence ; sur le réseau entier, 111 288 arêtes pour 110 254 paires distinctes, soit 1 034 arêtes perdues. B 5 et C 5 : une entrée par arête, les 111 288 sont gardées.
 - Coût : A 4, la variante est écrite, quelques lignes pour la brancher, et fermer une rue revient à remettre une case à zéro. B 4, quelques lignes, et fermer une rue revient à retirer une entrée d'une liste. C 3 : quelques lignes, mais les trois tableaux se reconstruisent quand le réseau change (un pont qui se lève).
 
 ## 3. La sensibilité
 
-Avec le poids du temps à 5 et celui de la lisibilité à 1 (mémoire 4, robustesse 1, coût 1) : A 19, B 54, C 55. La décision change : les tableaux compacts passent devant les listes d'un point.
+Avec le poids du temps à 5 et celui de la lisibilité à 1 (mémoire 4, robustesse 1, coût 1) : A 19, B 54, C 56. La décision ne change pas, les tableaux compacts restent premiers, de deux points au lieu d'un.
 
-La matrice est écartée quels que soient les poids. Entre B et C, le temps et la robustesse ne départagent pas : l'écart vaut 2 x poids de la lisibilité + poids du coût - poids de la mémoire, soit + 1 pour B avec les poids de l'atelier. Il suffit d'un point de lisibilité en moins, ou d'un point de mémoire en plus pris sur le coût, pour que C égale ou dépasse B. La décision est fragile et l'ADR le dit : elle tient à la lisibilité, pas à une mesure.
+La matrice est écartée quels que soient les poids. Entre B et C, le temps et la robustesse ne départagent pas : l'écart en faveur de C vaut poids de la mémoire - poids de la lisibilité - poids du coût, soit + 1 avec les poids de l'atelier. Un seul point passé de la mémoire à la lisibilité (temps 2, mémoire 3, lisibilité 3, robustesse 1, coût 1) retourne la décision : B 43, C 42. La décision est fragile et l'ADR le dit. Elle tient à deux choses : la mémoire pèse 4, et les 6,6 Mo des tableaux compacts sont sous le seuil de 10 Mo quand les 21,8 Mo des listes ne le sont pas ; si les deux options avaient la même note de mémoire, les listes mèneraient de 3 points.
