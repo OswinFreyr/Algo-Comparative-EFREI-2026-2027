@@ -1,0 +1,19 @@
+variante;taille;repetition;duree_ms;memoire_ko;controle
+trigrammes;10;1;758.461;78992;10 saisies
+trigrammes;10;2;409.397;70488;10 saisies
+trigrammes;10;3;417.918;70487;10 saisies
+trigrammes;20;1;876.039;13995;20 saisies
+trigrammes;20;2;845.131;14272;20 saisies
+trigrammes;20;3;797.803;14227;20 saisies
+trigrammes;50;1;2036.748;51619;50 saisies
+trigrammes;50;2;1954.461;51635;50 saisies
+trigrammes;50;3;1869.171;51488;50 saisies
+postgres;10;1;4547.454;912;10 saisies
+postgres;10;2;4642.673;916;10 saisies
+postgres;10;3;4636.801;930;10 saisies
+postgres;20;1;9397.244;833;20 saisies
+postgres;20;2;9187.884;956;20 saisies
+postgres;20;3;9438.670;930;20 saisies
+postgres;50;1;4986.553;353;50 saisies
+postgres;50;2;5151.371;1281;50 saisies
+postgres;50;3;4980.664;1169;50 saisies
