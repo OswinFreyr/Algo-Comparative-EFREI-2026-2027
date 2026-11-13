@@ -88,7 +88,7 @@ export function deuxOpt(d: number[][], depart: number[], journal?: (e: Echange) 
         // et (c, e) et y ajoute les arêtes (a, c) et (b, e) ; d[x][y] est la distance par la route du point x au
         // point y, en mètres. Le gain est la longueur de ce qu'on retire moins la longueur de ce qu'on ajoute. Juste
         // en dessous, le segment n'est inversé que si le gain est strictement positif : la tournée raccourcit.
-        const gain = 0;                       // provisoire : sans le gain, aucun échange n'est fait
+        const gain = d[a][b] + d[c][e] - d[a][c] - d[b][e];
         if (gain > 0) {
           inverser(route, i + 1, j); echanges++; ameliore = true;
           if (journal) journal({ i, j, gain, metres: longueur(d, route.slice(1, k + 1)) });
