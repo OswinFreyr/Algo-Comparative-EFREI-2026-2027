@@ -101,7 +101,7 @@ function dynamiqueTournee(t: TourneeCargo): ReponseChargement {
         // À COMPLÉTER (atelier 12) : la règle de la case. La case de la nouvelle couche, apres[k], prend le meilleur
         // des deux : `sans`, ou `avec` s'il est strictement plus grand. Quand c'est `avec`, le colis est pris pour
         // cette case : il faut le noter avec marquer(m, k), sinon la liste des colis de la vague reste vide.
-        apres[k] = sans;                      // provisoire : sans la règle, la case ne prend jamais le colis
+        if (avec > sans) { apres[k] = avec; marquer(m, k); } else apres[k] = sans;
       }
     }
     const tmp = avant; avant = apres; apres = tmp;
