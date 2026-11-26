@@ -1,0 +1,27 @@
+{
+  "sujet": "tournees",
+  "jeu": "moyenne",
+  "tailles": [
+    1,
+    5,
+    20
+  ],
+  "variantes": [
+    "voisin",
+    "deuxopt",
+    "recuit"
+  ],
+  "repetitions": 3,
+  "echauffement": 1,
+  "chauffe_max_ms": 5000,
+  "statistique": "médiane",
+  "machine": {
+    "processeur": "Apple M1 Pro",
+    "coeurs": 8,
+    "memoire_go": 16,
+    "systeme": "Darwin 24.6.0",
+    "node": "v22.22.3"
+  },
+  "date": "2026-11-13T14:49:08.141Z",
+  "csv": "bench/resultats/2026-11-13T14-49-08-tournees.csv"
+}
